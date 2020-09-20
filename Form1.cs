@@ -1,50 +1,65 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Многоугольники
 {
     public partial class Form1 : Form
     {
-        Shape square = new Square(100, 100);
+        List<Shape> shapes = new List<Shape>();
         public Form1()
         {
+            shapes.Add(new Triangle(50, 50));
             InitializeComponent();
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
-            square.dragged = false;
+            foreach (Shape i in shapes) i.dragged = false;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-                
+             
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            square.Draw(e.Graphics);
+            foreach (Shape i in shapes) i.Draw(e.Graphics);
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-
-            if (square.IsInside(e.X, e.Y)==true)
+            foreach (Shape i in shapes)
             {
-                square.dragged = true;
+                if (i.IsInside(e.X, e.Y) == true)
+                {
+                    Console.WriteLine("OK");
+                    i.dragged = true;
+                }
             }
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {   
-            if (square.dragged == true)
+        {
+            foreach (Shape i in shapes.ToList())
             {
-                square = new Circle(e.X, e.Y);
-                square.dragged = true;
-                Refresh();
+                if (i.dragged == true)
+                {
+                    shapes.RemoveAt(shapes.IndexOf(i));
+                    shapes.Add(new Triangle(e.X, e.Y));
+                    shapes.Last().dragged = true;
+                    Refresh();
+                }
             }
+        }
 
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            shapes.Add(new Triangle(e.X, e.Y));
+            Refresh();
         }
     }
     public abstract class Shape
@@ -147,12 +162,17 @@ namespace Многоугольники
         }
         public override void Draw(Graphics g)
         {
-            g.FillRectangle(new SolidBrush(Color.Black), new Rectangle(x-R, y-R, 50, 50));
+            int halfSide = (int)Math.Sqrt(R * R / 2);
+            g.FillRectangle(new SolidBrush(Color.Black), new Rectangle(x-R, y-R, 2*halfSide, 2*halfSide));
         }
         public override bool IsInside(int xx, int yy)
         {
-            int side = 50;
-            if (xx>=x && xx<=x+side && yy >= y && yy <= y+side) return true;
+            //TODO
+            int halfSide = (int)Math.Sqrt(R * R / 2);
+            if ((xx >= x && xx <= x + halfSide && yy >= y && yy <= -y - halfSide)) return true;
+                //(xx >= x && xx <= x + halfSide && yy >= y && yy <= y + halfSide) ||
+                //(xx<=x && xx >= x-halfSide && yy>=y && yy<=y+halfSide) ||
+                //(xx <= x && xx >= x - halfSide && yy >= y && yy <= -(y + halfSide))) return true;
             return false;
         }
     }
