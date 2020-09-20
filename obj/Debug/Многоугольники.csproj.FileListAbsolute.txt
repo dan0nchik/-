@@ -1,0 +1,10 @@
+C:\Users\Daniel\dev\dotnet core\Многоугольники\bin\Debug\Многоугольники.exe.config
+C:\Users\Daniel\dev\dotnet core\Многоугольники\bin\Debug\Многоугольники.exe
+C:\Users\Daniel\dev\dotnet core\Многоугольники\bin\Debug\Многоугольники.pdb
+C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.csprojAssemblyReference.cache
+C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.Properties.Resources.resources
+C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.csproj.GenerateResource.cache
+C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.csproj.CoreCompileInputs.cache
+C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.exe
+C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.pdb
+C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.Form1.resources
