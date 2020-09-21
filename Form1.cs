@@ -36,7 +36,6 @@ namespace Многоугольники
             {
                 if (i.IsInside(e.X, e.Y) == true)
                 {
-                    Console.WriteLine("OK");
                     i.dragged = true;
                 }
             }
@@ -58,8 +57,23 @@ namespace Многоугольники
 
         private void Form1_MouseClick(object sender, MouseEventArgs e)
         {
-            shapes.Add(new Triangle(e.X, e.Y));
-            Refresh();
+
+            if (e.Button == MouseButtons.Right)
+            {
+                foreach (Shape i in shapes.ToList())
+                {
+                    if (i.IsInside(e.X, e.Y) == true)
+                    {
+                        shapes.RemoveAt(shapes.IndexOf(i));
+                        Refresh();
+                    }
+                }
+            }
+            else
+            {
+                shapes.Add(new Triangle(e.X, e.Y));
+                Refresh();
+            }
         }
     }
     public abstract class Shape
