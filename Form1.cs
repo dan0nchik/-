@@ -11,8 +11,9 @@ namespace Многоугольники
         List<Shape> shapes = new List<Shape>();
         public Form1()
         {
-            shapes.Add(new Triangle(50, 50));
+            shapes.Add(new Circle(50, 50));
             InitializeComponent();
+            DoubleBuffered = true;
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
@@ -32,32 +33,24 @@ namespace Многоугольники
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            foreach (Shape i in shapes)
+            bool shifted = false;
+            foreach (Shape i in shapes.ToList())
             {
                 if (i.IsInside(e.X, e.Y) == true)
                 {
                     i.dragged = true;
+                    shifted = true;
+                    i.ChosenX =  i.X-e.X;
+                    i.ChosenY =  i.Y-e.Y;
                 }
+                
+                
             }
-        }
-
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
-        {
-            foreach (Shape i in shapes.ToList())
-            {
-                if (i.dragged == true)
+            if(shifted == false)
                 {
-                    shapes.RemoveAt(shapes.IndexOf(i));
-                    shapes.Add(new Triangle(e.X, e.Y));
-                    shapes.Last().dragged = true;
+                    shapes.Add(new Circle(e.X, e.Y));
                     Refresh();
                 }
-            }
-        }
-
-        private void Form1_MouseClick(object sender, MouseEventArgs e)
-        {
-
             if (e.Button == MouseButtons.Right)
             {
                 foreach (Shape i in shapes.ToList())
@@ -69,20 +62,30 @@ namespace Многоугольники
                     }
                 }
             }
-            else
+           
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            foreach (Shape i in shapes.ToList())
             {
-                shapes.Add(new Triangle(e.X, e.Y));
-                Refresh();
+                if (i.dragged == true)
+                {
+
+                    i.X = e.X+i.ChosenX;
+                    i.Y = e.Y+i.ChosenY;
+                    Refresh();
+                }
             }
         }
     }
     public abstract class Shape
     {
-        protected int x, y;
+        protected int x, y, chosenX, chosenY;
         protected static int r;
         public bool dragged;
         protected static Color lineC, fillC;
-        protected int X
+        public int X
         {
             get => x;
             set
@@ -90,7 +93,7 @@ namespace Многоугольники
                 x = value;
             }
         }
-        protected int Y
+        public int Y
         {
             get => y;
             set
@@ -98,7 +101,24 @@ namespace Многоугольники
                 y = value;
             }
         }
-        protected  int R
+        public int ChosenX
+        {
+            get => chosenX;
+            set
+            {
+                chosenX = value;
+            }
+        }
+        public int ChosenY
+        {
+            get => chosenY;
+            set
+            {
+                chosenY = value;
+            }
+        }
+
+        public int R
         {
             get => r;
             set
@@ -115,7 +135,7 @@ namespace Многоугольники
 
         static Shape()
         {
-            r = 35;
+            r = 20;
         }
         
 
@@ -130,7 +150,7 @@ namespace Многоугольники
         }
         public override void Draw(Graphics g)
         {
-            g.FillEllipse(new SolidBrush(Color.Black), new Rectangle(x-R, y-R, 2*R, 2*R));
+             g.FillEllipse(new SolidBrush(Color.Black), new Rectangle(x - R, y - R, 2 * R, 2 * R));
         }
         public override bool IsInside(int xx, int yy)
         {
@@ -183,10 +203,10 @@ namespace Многоугольники
         {
             //TODO
             int halfSide = (int)Math.Sqrt(R * R / 2);
-            if ((xx >= x && xx <= x + halfSide && yy >= y && yy <= -y - halfSide)) return true;
-                //(xx >= x && xx <= x + halfSide && yy >= y && yy <= y + halfSide) ||
-                //(xx<=x && xx >= x-halfSide && yy>=y && yy<=y+halfSide) ||
-                //(xx <= x && xx >= x - halfSide && yy >= y && yy <= -(y + halfSide))) return true;
+            if ((xx >= x && xx <= x + halfSide && yy >= y && yy <= -y - halfSide)|| 
+            (xx >= x && xx <= x + halfSide && yy >= y && yy <= y + halfSide) ||
+            (xx <= x && xx >= x - halfSide && yy >= y && yy <= y + halfSide) ||
+            (xx <= x && xx >= x - halfSide && yy >= y && yy <= -(y + halfSide)))return true;
             return false;
         }
     }
