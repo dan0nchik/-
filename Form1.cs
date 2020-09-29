@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace Многоугольники
@@ -9,6 +10,7 @@ namespace Многоугольники
     public partial class Form1 : Form
     {
         List<Shape> shapes = new List<Shape>();
+        int shapeFlag;
         public Form1()
         {
             shapes.Add(new Circle(50, 50));
@@ -28,7 +30,35 @@ namespace Многоугольники
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            foreach (Shape i in shapes) i.Draw(e.Graphics);
+            foreach (Shape i in shapes)
+            {
+                i.Draw(e.Graphics);
+            }
+            double k, b;
+            int topCount = 0, bottomCount = 0;
+            if (shapes.Count > 2)
+            {
+                foreach (Shape first in shapes)
+                {
+                    foreach (Shape second in shapes)
+                    {
+                        if (second == first) continue;
+                        k = (second.Y - first.Y) / (second.X - first.X);
+                        b = first.Y - k * first.X;
+                        
+                        foreach (Shape third in shapes)
+                        {
+                            if (third == second) continue;
+                            if (third.Y < k * third.X + b) topCount++;
+                            else continue;
+                            if (third.Y > k * third.X + b) bottomCount++;
+                            else continue;
+                        }
+                        if (topCount == 0 || bottomCount == 0) e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                        topCount = 0; bottomCount = 0;
+                    }
+                }
+            }
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -36,7 +66,7 @@ namespace Многоугольники
             bool shifted = false;
             foreach (Shape i in shapes.ToList())
             {
-                if (i.IsInside(e.X, e.Y) == true)
+                if (i.IsInside(e.X, e.Y))
                 {
                     i.dragged = true;
                     shifted = true;
@@ -48,7 +78,18 @@ namespace Многоугольники
             }
             if(shifted == false)
                 {
-                    shapes.Add(new Circle(e.X, e.Y));
+                switch (shapeFlag)
+                {
+                    case 0:
+                        shapes.Add(new Circle(e.X, e.Y));
+                        break;
+                    case 1:
+                        shapes.Add(new Square(e.X, e.Y));
+                        break;
+                    case 2:
+                        shapes.Add(new Triangle(e.X, e.Y));
+                        break;
+                }
                     Refresh();
                 }
             if (e.Button == MouseButtons.Right)
@@ -77,6 +118,21 @@ namespace Многоугольники
                     Refresh();
                 }
             }
+        }
+
+        private void circleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            shapeFlag = 0;
+        }
+
+        private void squareToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            shapeFlag = 1;
+        }
+
+        private void triangleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            shapeFlag = 2;
         }
     }
     public abstract class Shape
@@ -196,18 +252,25 @@ namespace Многоугольники
         }
         public override void Draw(Graphics g)
         {
-            int halfSide = (int)Math.Sqrt(R * R / 2);
-            g.FillRectangle(new SolidBrush(Color.Black), new Rectangle(x-R, y-R, 2*halfSide, 2*halfSide));
+            Point[] points = new Point[]
+            {
+            new Point(X - (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2)),
+            new Point(X - (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2)),
+            new Point(X + (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2)),
+            new Point(X + (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2))
+            };
+
+            g.FillPolygon(new SolidBrush(Color.Black), points);
         }
         public override bool IsInside(int xx, int yy)
         {
             //TODO
-            int halfSide = (int)Math.Sqrt(R * R / 2);
-            if ((xx >= x && xx <= x + halfSide && yy >= y && yy <= -y - halfSide)|| 
-            (xx >= x && xx <= x + halfSide && yy >= y && yy <= y + halfSide) ||
-            (xx <= x && xx >= x - halfSide && yy >= y && yy <= y + halfSide) ||
-            (xx <= x && xx >= x - halfSide && yy >= y && yy <= -(y + halfSide)))return true;
-            return false;
+            Point A = new Point(X - (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2));
+            Point B = new Point(X - (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2));
+            Point C = new Point(X + (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2));
+            Point D = new Point(X + (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2));
+
+            return (A.X <= xx) && (xx <= C.X) && (B.Y <= yy) && (yy <= D.Y);
         }
     }
 }
