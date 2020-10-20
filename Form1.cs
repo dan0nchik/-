@@ -21,6 +21,7 @@ namespace Многоугольники
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
             foreach (Shape i in shapes) i.dragged = false;
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -42,20 +43,39 @@ namespace Многоугольники
                 {
                     foreach (Shape second in shapes)
                     {
-                        if (second == first) continue;
-                        k = (second.Y - first.Y) / (second.X - first.X);
-                        b = first.Y - k * first.X;
+                       if (second == first) continue;
                         
                         foreach (Shape third in shapes)
                         {
                             if (third == second) continue;
-                            if (third.Y < k * third.X + b) topCount++;
-                            else continue;
-                            if (third.Y > k * third.X + b) bottomCount++;
-                            else continue;
+                            if (second.X == first.X)
+                            {
+                                if (third.X >= second.X)
+                                    topCount++;
+                                else continue;
+                                if (third.X < second.X) bottomCount++;
+                                else continue;
+                            }
+                            else
+                            {
+                                k = (second.Y - first.Y) / (second.X - first.X);
+                                b = first.Y - k * first.X;
+                                if (third.Y < k * third.X + b)
+                                {
+                                    topCount++;
+                                }
+                                else continue;
+                                if (third.Y > k * third.X + b) bottomCount++;
+                                else continue;
+                            }
                         }
-                        if (topCount == 0 || bottomCount == 0) e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
-                        topCount = 0; bottomCount = 0;
+                        if( topCount == 0 || bottomCount == 0) {
+                            e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                            first.connected = true;
+                            second.connected = true;
+                            topCount = 0; bottomCount = 0;
+                        }
+                        
                     }
                 }
             }
@@ -90,7 +110,7 @@ namespace Многоугольники
                         shapes.Add(new Triangle(e.X, e.Y));
                         break;
                 }
-                    Refresh();
+                Refresh();
                 }
             if (e.Button == MouseButtons.Right)
             {
@@ -139,7 +159,7 @@ namespace Многоугольники
     {
         protected int x, y, chosenX, chosenY;
         protected static int r;
-        public bool dragged;
+        public bool dragged, connected = false;
         protected static Color lineC, fillC;
         public int X
         {
@@ -191,7 +211,7 @@ namespace Многоугольники
 
         static Shape()
         {
-            r = 20;
+            r = 10;
         }
         
 
