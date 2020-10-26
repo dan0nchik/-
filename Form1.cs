@@ -31,54 +31,68 @@ namespace Многоугольники
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            foreach (Shape i in shapes)
-            {
-                i.Draw(e.Graphics);
-            }
             double k, b;
-            int topCount = 0, bottomCount = 0;
+            int topCount, bottomCount, rightCount, leftCount;
+            foreach (Shape shape in shapes)
+                {
+                    shape.inShell = false;
+                }
             if (shapes.Count > 2)
             {
+                
                 foreach (Shape first in shapes)
                 {
                     foreach (Shape second in shapes)
                     {
-                       if (second == first) continue;
                         
-                        foreach (Shape third in shapes)
+                        if (second != first)
                         {
-                            if (third == second) continue;
-                            if (second.X == first.X)
+                            if ((second.X - first.X) == 0)
                             {
-                                if (third.X >= second.X)
-                                    topCount++;
-                                else continue;
-                                if (third.X < second.X) bottomCount++;
-                                else continue;
+                                rightCount = 0;
+                                leftCount = 0;
+                                foreach (Shape third in shapes)
+                                {
+                                    if (third != first && third != second) { 
+                                    if (first.X >= third.X) rightCount++;
+                                    else leftCount++;
+                                }
+                                }
+                                if (rightCount == 0 || leftCount == 0)
+                                {
+                                    second.inShell = true;
+                                    first.inShell = true;
+                                    e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                                }
                             }
                             else
                             {
-                                k = (second.Y - first.Y) / (second.X - first.X);
-                                b = first.Y - k * first.X;
-                                if (third.Y < k * third.X + b)
+                                k = ((double)first.Y - (double)second.Y) / ((double)first.X - (double)second.X);
+                                b = first.Y - (k * first.X);
+                                topCount = 0;
+                                bottomCount = 0;
+                                foreach (Shape third in shapes)
                                 {
-                                    topCount++;
+                                    if (third != first && third != second)
+                                    {
+                                        if (third.Y >= k * third.X + b) topCount++;
+                                        else bottomCount++;
+                                    }
                                 }
-                                else continue;
-                                if (third.Y > k * third.X + b) bottomCount++;
-                                else continue;
+                                if (bottomCount == 0 || topCount == 0)
+                                {
+                                    second.inShell = true;
+                                    first.inShell = true;
+                                    e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                                }
                             }
+
                         }
-                        if( topCount == 0 || bottomCount == 0) {
-                            e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
-                            first.connected = true;
-                            second.connected = true;
-                            topCount = 0; bottomCount = 0;
-                        }
-                        
                     }
                 }
+                foreach (Shape i in shapes.ToList()) if (!i.inShell) shapes.Remove(i);
             }
+            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics);
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -132,7 +146,7 @@ namespace Многоугольники
             {
                 if (i.dragged == true)
                 {
-
+                
                     i.X = e.X+i.ChosenX;
                     i.Y = e.Y+i.ChosenY;
                     Refresh();
@@ -159,7 +173,8 @@ namespace Многоугольники
     {
         protected int x, y, chosenX, chosenY;
         protected static int r;
-        public bool dragged, connected = false;
+        public bool dragged;
+        public bool inShell;
         protected static Color lineC, fillC;
         public int X
         {
