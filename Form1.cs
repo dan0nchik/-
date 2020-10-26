@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace Многоугольники
@@ -10,7 +9,8 @@ namespace Многоугольники
     public partial class Form1 : Form
     {
         List<Shape> shapes = new List<Shape>();
-        int shapeFlag;
+        private int shapeFlag;
+        private Color lineColor = Color.Black, pointColor = Color.Black;
         public Form1()
         {
             shapes.Add(new Circle(50, 50));
@@ -26,25 +26,30 @@ namespace Многоугольники
 
         private void Form1_Load(object sender, EventArgs e)
         {
-             
+
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            ByDefinitionAlgorithm(e, lineColor);
+        }
+
+        private void ByDefinitionAlgorithm(PaintEventArgs e, Color lineColor)
+        {
             double k, b;
             int topCount, bottomCount, rightCount, leftCount;
             foreach (Shape shape in shapes)
-                {
-                    shape.inShell = false;
-                }
+            {
+                shape.inShell = false;
+            }
             if (shapes.Count > 2)
             {
-                
+
                 foreach (Shape first in shapes)
                 {
                     foreach (Shape second in shapes)
                     {
-                        
+
                         if (second != first)
                         {
                             if ((second.X - first.X) == 0)
@@ -53,16 +58,17 @@ namespace Многоугольники
                                 leftCount = 0;
                                 foreach (Shape third in shapes)
                                 {
-                                    if (third != first && third != second) { 
-                                    if (first.X >= third.X) rightCount++;
-                                    else leftCount++;
-                                }
+                                    if (third != first && third != second)
+                                    {
+                                        if (first.X >= third.X) rightCount++;
+                                        else leftCount++;
+                                    }
                                 }
                                 if (rightCount == 0 || leftCount == 0)
                                 {
                                     second.inShell = true;
                                     first.inShell = true;
-                                    e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                                    e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
                                 }
                             }
                             else
@@ -83,7 +89,7 @@ namespace Многоугольники
                                 {
                                     second.inShell = true;
                                     first.inShell = true;
-                                    e.Graphics.DrawLine(new Pen(new SolidBrush(Color.Black)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                                    e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
                                 }
                             }
 
@@ -92,7 +98,7 @@ namespace Многоугольники
                 }
                 foreach (Shape i in shapes.ToList()) if (!i.inShell) shapes.Remove(i);
             }
-            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics);
+            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -104,14 +110,12 @@ namespace Многоугольники
                 {
                     i.dragged = true;
                     shifted = true;
-                    i.ChosenX =  i.X-e.X;
-                    i.ChosenY =  i.Y-e.Y;
+                    i.ChosenX = i.X - e.X;
+                    i.ChosenY = i.Y - e.Y;
                 }
-                
-                
             }
-            if(shifted == false)
-                {
+            if (shifted == false)
+            {
                 switch (shapeFlag)
                 {
                     case 0:
@@ -125,7 +129,7 @@ namespace Многоугольники
                         break;
                 }
                 Refresh();
-                }
+            }
             if (e.Button == MouseButtons.Right)
             {
                 foreach (Shape i in shapes.ToList())
@@ -137,7 +141,7 @@ namespace Многоугольники
                     }
                 }
             }
-           
+
         }
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
@@ -146,9 +150,9 @@ namespace Многоугольники
             {
                 if (i.dragged == true)
                 {
-                
-                    i.X = e.X+i.ChosenX;
-                    i.Y = e.Y+i.ChosenY;
+
+                    i.X = e.X + i.ChosenX;
+                    i.Y = e.Y + i.ChosenY;
                     Refresh();
                 }
             }
@@ -168,144 +172,15 @@ namespace Многоугольники
         {
             shapeFlag = 2;
         }
-    }
-    public abstract class Shape
-    {
-        protected int x, y, chosenX, chosenY;
-        protected static int r;
-        public bool dragged;
-        public bool inShell;
-        protected static Color lineC, fillC;
-        public int X
+        private ColorDialog MyDialog = new ColorDialog();
+        private void linesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            get => x;
-            set
-            {
-                x = value;
-            }
+            if (MyDialog.ShowDialog() == DialogResult.OK) { lineColor = MyDialog.Color; Refresh(); }
         }
-        public int Y
+        private void pointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            get => y;
-            set
-            {
-                y = value;
-            }
-        }
-        public int ChosenX
-        {
-            get => chosenX;
-            set
-            {
-                chosenX = value;
-            }
-        }
-        public int ChosenY
-        {
-            get => chosenY;
-            set
-            {
-                chosenY = value;
-            }
-        }
-
-        public int R
-        {
-            get => r;
-            set
-            {
-                r = value;
-            }
-        }
-        
-        public Shape(int xx, int yy)
-        {
-            x = xx;
-            y = yy;
-        }
-
-        static Shape()
-        {
-            r = 10;
-        }
-        
-
-        public abstract void Draw(Graphics g);
-        public abstract bool IsInside(int xx, int yy);
-    }
-
-    public class Circle : Shape
-    {
-        public Circle(int xx, int yy) : base(xx,yy)
-        {
-        }
-        public override void Draw(Graphics g)
-        {
-             g.FillEllipse(new SolidBrush(Color.Black), new Rectangle(x - R, y - R, 2 * R, 2 * R));
-        }
-        public override bool IsInside(int xx, int yy)
-        {
-            return Math.Sqrt(Math.Pow(x - xx, 2) + Math.Pow(y - yy, 2)) <= R;
-        }
-
-    }
-    
-
-    public class Triangle : Shape
-    {
-        
-        public Triangle(int xx, int yy) : base(xx, yy)
-        {
-        }
-        public override void Draw(Graphics g)
-        {
-            //плохой код
-            Point B = new Point(x, y - r);
-            Point A = new Point(x - (int)(r * Math.Sqrt(3) / 2), (int)(y + (0.5 * r)));
-            Point C = new Point(x + (int)(r * Math.Sqrt(3) / 2), (int)(y + (0.5 * r)));
-            g.FillPolygon(new SolidBrush(Color.Black), new Point[] { A, B, C });
-        }
-        public override bool IsInside(int xx, int yy)
-        {
-            //плохой код
-            Point B = new Point(x, y - R);
-            Point A = new Point(x - (int)(R * Math.Sqrt(3) / 2), (int)(y + (0.5 * R)));
-            Point C = new Point(x + (int)(R * Math.Sqrt(3) / 2), (int)(y + (0.5 * R)));
-            var first = (A.X - xx) * (B.Y - A.Y) - (B.X - A.X) * (A.Y - yy);
-            var second = (B.X - xx) * (C.Y - B.Y) - (C.X - B.X) * (B.Y - yy);
-            var third = (C.X - xx) * (A.Y - C.Y) - (A.X - C.X) * (C.Y - yy);
-            if (first == 0 || second == 0 || third == 0) return true;
-            if ((first > 0 && second > 0 && third > 0) || (first < 0 && second < 0 && third < 0)) return true;
-            return false;
-        }
-    }
-
-    public class Square : Shape
-    {
-        public Square(int xx, int yy) : base(xx, yy)
-        {
-        }
-        public override void Draw(Graphics g)
-        {
-            Point[] points = new Point[]
-            {
-            new Point(X - (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2)),
-            new Point(X - (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2)),
-            new Point(X + (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2)),
-            new Point(X + (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2))
-            };
-
-            g.FillPolygon(new SolidBrush(Color.Black), points);
-        }
-        public override bool IsInside(int xx, int yy)
-        {
-            //TODO
-            Point A = new Point(X - (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2));
-            Point B = new Point(X - (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2));
-            Point C = new Point(X + (int)(Math.Sqrt(2) * R / 2), Y - (int)(Math.Sqrt(2) * R / 2));
-            Point D = new Point(X + (int)(Math.Sqrt(2) * R / 2), Y + (int)(Math.Sqrt(2) * R / 2));
-
-            return (A.X <= xx) && (xx <= C.X) && (B.Y <= yy) && (yy <= D.Y);
+            if (MyDialog.ShowDialog() == DialogResult.OK) { pointColor = MyDialog.Color; Refresh(); }
         }
     }
 }
+
