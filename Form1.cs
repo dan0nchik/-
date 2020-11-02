@@ -11,6 +11,7 @@ namespace Многоугольники
         List<Shape> shapes = new List<Shape>();
         private int shapeFlag;
         private Color lineColor = Color.Black, pointColor = Color.Black;
+       
         public Form1()
         {
             shapes.Add(new Circle(50, 50));
@@ -20,7 +21,12 @@ namespace Многоугольники
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
-            foreach (Shape i in shapes) i.dragged = false;
+            foreach (Shape i in shapes.ToList())
+            {
+                i.dragged = false;
+                //if (shapes.Count > 2)
+                    //if (!i.inShell) { shapes.Remove(i); Refresh(); }
+            }
 
         }
 
@@ -31,7 +37,8 @@ namespace Многоугольники
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            ByDefinitionAlgorithm(e, lineColor);
+            //ByDefinitionAlgorithm(e, lineColor);
+            JarvisAlgorithm(e, lineColor);
         }
 
         private void ByDefinitionAlgorithm(PaintEventArgs e, Color lineColor)
@@ -96,8 +103,31 @@ namespace Многоугольники
                         }
                     }
                 }
-                foreach (Shape i in shapes.ToList()) if (!i.inShell) shapes.Remove(i);
+           
             }
+            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
+        }
+
+        private void JarvisAlgorithm(PaintEventArgs e, Color lineColor)
+        {
+            Shape max = new Circle(int.MaxValue, int.MinValue);
+            Shape realMax = new Circle(int.MaxValue, int.MinValue);
+            foreach (Shape A in shapes)
+            {
+                if (A.Y > max.Y)
+                {
+                    max = A;
+                }
+                if(A.Y == max.Y)
+                    {
+                        if(A.X < max.X)
+                        {
+                            max = A;
+                        }
+                    }
+            }
+            Console.WriteLine("X: "+max.X + " Y: " + max.Y);
+
             foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
         }
 
