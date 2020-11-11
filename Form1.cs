@@ -1,28 +1,15 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace Многоугольники
 {
-
-    struct vector
-    {
-        public double x, y;
-        public vector(double x, double y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-    }
     public partial class Form1 : Form
     {
         List<Shape> shapes = new List<Shape>();
         private int shapeFlag;
-        List<Shape> hull = new List<Shape>();
         private Color lineColor = Color.Black, pointColor = Color.Black;
 
         public Form1()
@@ -50,11 +37,11 @@ namespace Многоугольники
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            
+
             if (shapes.Count > 2)
             {
                 foreach (Shape shape in shapes)
-                shape.inShell = false;
+                    shape.inShell = false;
                 //ByDefinitionAlgorithm(e, lineColor);
                 JarvisAlgorithm(e, lineColor);
             }
@@ -67,57 +54,57 @@ namespace Многоугольники
             double k, b;
             int topCount, bottomCount, rightCount, leftCount;
 
-                foreach (Shape first in shapes)
+            foreach (Shape first in shapes)
+            {
+                foreach (Shape second in shapes)
                 {
-                    foreach (Shape second in shapes)
+
+                    if (second != first)
                     {
-
-                        if (second != first)
+                        if ((second.X - first.X) == 0)
                         {
-                            if ((second.X - first.X) == 0)
+                            rightCount = 0;
+                            leftCount = 0;
+                            foreach (Shape third in shapes)
                             {
-                                rightCount = 0;
-                                leftCount = 0;
-                                foreach (Shape third in shapes)
+                                if (third != first && third != second)
                                 {
-                                    if (third != first && third != second)
-                                    {
-                                        if (first.X >= third.X) rightCount++;
-                                        else leftCount++;
-                                    }
-                                }
-                                if (rightCount == 0 || leftCount == 0)
-                                {
-                                    second.inShell = true;
-                                    first.inShell = true;
-                                    e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                                    if (first.X >= third.X) rightCount++;
+                                    else leftCount++;
                                 }
                             }
-                            else
+                            if (rightCount == 0 || leftCount == 0)
                             {
-                                k = ((double)first.Y - (double)second.Y) / ((double)first.X - (double)second.X);
-                                b = first.Y - (k * first.X);
-                                topCount = 0;
-                                bottomCount = 0;
-                                foreach (Shape third in shapes)
-                                {
-                                    if (third != first && third != second)
-                                    {
-                                        if (third.Y >= k * third.X + b) topCount++;
-                                        else bottomCount++;
-                                    }
-                                }
-                                if (bottomCount == 0 || topCount == 0)
-                                {
-                                    second.inShell = true;
-                                    first.inShell = true;
-                                    e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
-                                }
+                                second.inShell = true;
+                                first.inShell = true;
+                                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
                             }
-
                         }
+                        else
+                        {
+                            k = ((double)first.Y - (double)second.Y) / ((double)first.X - (double)second.X);
+                            b = first.Y - (k * first.X);
+                            topCount = 0;
+                            bottomCount = 0;
+                            foreach (Shape third in shapes)
+                            {
+                                if (third != first && third != second)
+                                {
+                                    if (third.Y >= k * third.X + b) topCount++;
+                                    else bottomCount++;
+                                }
+                            }
+                            if (bottomCount == 0 || topCount == 0)
+                            {
+                                second.inShell = true;
+                                first.inShell = true;
+                                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
+                            }
+                        }
+
                     }
-           
+                }
+
             }
         }
 
@@ -131,11 +118,11 @@ namespace Многоугольники
                     indexA = i;
                 }
             }
-                double minCos = double.MaxValue;
-                Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-                
-                for(int i = 0; i < shapes.Count;++i)
-                {
+            double minCos = double.MaxValue;
+            Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
+
+            for (int i = 0; i < shapes.Count; i++)
+            {
                 if (i != indexA)
                 {
                     if (Cos(shapes[i], shapes[indexA], M) < minCos)
@@ -144,16 +131,16 @@ namespace Многоугольники
                         indexP = i;
                     }
                 }
-                }
-                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexA].X, shapes[indexA].Y), new Point(shapes[indexP].X,shapes[indexP].Y));
+            }
+            e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexA].X, shapes[indexA].Y), new Point(shapes[indexP].X, shapes[indexP].Y));
             shapes[indexA].inShell = true;
             shapes[indexP].inShell = true;
             int endPointIndex = indexA, nextIndex = 0;
-            
+
             do
             {
                 minCos = double.MaxValue;
-                for(int i = 0; i < shapes.Count;++i)
+                for (int i = 0; i < shapes.Count; i++)
                 {
                     if (i != indexA)
                     {
@@ -164,18 +151,18 @@ namespace Многоугольники
                         }
                     }
                 }
-                
+
                 e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexP].X, shapes[indexP].Y), new Point(shapes[nextIndex].X, shapes[nextIndex].Y));
                 shapes[nextIndex].inShell = true;
                 indexA = indexP;
                 indexP = nextIndex;
             } while (indexP != endPointIndex);
-         
+
             double Cos(Shape one, Shape two, Point three)
             {
-                Point v1 = new Point(two.X - one.X,two.Y-one.Y);
+                Point v1 = new Point(two.X - one.X, two.Y - one.Y);
                 Point v2 = new Point(two.X - three.X, two.Y - three.Y);
-                return (v1.X * v2.X + v1.Y * v2.Y) / (Math.Sqrt(v1.X * v1.X + v1.X * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
+                return ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
             }
         }
 
