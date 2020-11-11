@@ -9,7 +9,7 @@ namespace Многоугольники
     public partial class Form1 : Form
     {
         List<Shape> shapes = new List<Shape>();
-        private int shapeFlag;
+        private int shapeFlag, algoFlag;
         private Color lineColor = Color.Black, pointColor = Color.Black;
 
         public Form1()
@@ -42,7 +42,9 @@ namespace Многоугольники
             {
                 foreach (Shape shape in shapes)
                     shape.inShell = false;
-                //ByDefinitionAlgorithm(e, lineColor);
+                if(algoFlag == 0)
+                ByDefinitionAlgorithm(e, lineColor);
+                else
                 JarvisAlgorithm(e, lineColor);
             }
 
@@ -243,6 +245,22 @@ namespace Многоугольники
         {
             if (MyDialog.ShowDialog() == DialogResult.OK) { lineColor = MyDialog.Color; Refresh(); }
         }
+
+        private void algorithmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void byDefinitionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            algoFlag = 1;
+        }
+
+        private void jarvisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            algoFlag = 0;
+        }
+
         private void pointsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MyDialog.ShowDialog() == DialogResult.OK) { pointColor = MyDialog.Color; Refresh(); }
