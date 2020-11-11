@@ -1,17 +1,30 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Многоугольники
 {
+
+    struct vector
+    {
+        public double x, y;
+        public vector(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
     public partial class Form1 : Form
     {
         List<Shape> shapes = new List<Shape>();
         private int shapeFlag;
+        List<Shape> hull = new List<Shape>();
         private Color lineColor = Color.Black, pointColor = Color.Black;
-       
+
         public Form1()
         {
             shapes.Add(new Circle(50, 50));
@@ -24,8 +37,8 @@ namespace Многоугольники
             foreach (Shape i in shapes.ToList())
             {
                 i.dragged = false;
-                //if (shapes.Count > 2)
-                    //if (!i.inShell) { shapes.Remove(i); Refresh(); }
+                if (shapes.Count > 2)
+                    if (!i.inShell) { shapes.Remove(i); Refresh(); }
             }
 
         }
@@ -37,20 +50,22 @@ namespace Многоугольники
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            //ByDefinitionAlgorithm(e, lineColor);
-            JarvisAlgorithm(e, lineColor);
+            
+            if (shapes.Count > 2)
+            {
+                foreach (Shape shape in shapes)
+                shape.inShell = false;
+                //ByDefinitionAlgorithm(e, lineColor);
+                JarvisAlgorithm(e, lineColor);
+            }
+
+            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
         }
 
         private void ByDefinitionAlgorithm(PaintEventArgs e, Color lineColor)
         {
             double k, b;
             int topCount, bottomCount, rightCount, leftCount;
-            foreach (Shape shape in shapes)
-            {
-                shape.inShell = false;
-            }
-            if (shapes.Count > 2)
-            {
 
                 foreach (Shape first in shapes)
                 {
@@ -102,34 +117,68 @@ namespace Многоугольники
 
                         }
                     }
-                }
            
             }
-            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
         }
 
         private void JarvisAlgorithm(PaintEventArgs e, Color lineColor)
         {
-            Shape max = new Circle(int.MaxValue, int.MinValue);
-            Shape realMax = new Circle(int.MaxValue, int.MinValue);
-            foreach (Shape A in shapes)
+            int indexA = 0, indexP = 0;
+            for (int i = 0; i < shapes.Count; ++i)
             {
-                if (A.Y > max.Y)
+                if (shapes[indexA].Y < shapes[i].Y)
                 {
-                    max = A;
+                    indexA = i;
                 }
-                if(A.Y == max.Y)
+            }
+                double minCos = double.MaxValue;
+                Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
+                
+                for(int i = 0; i < shapes.Count;++i)
+                {
+                if (i != indexA)
+                {
+                    if (Cos(shapes[i], shapes[indexA], M) < minCos)
                     {
-                        if(A.X < max.X)
+                        minCos = Cos(shapes[i], shapes[indexA], M);
+                        indexP = i;
+                    }
+                }
+                }
+                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexA].X, shapes[indexA].Y), new Point(shapes[indexP].X,shapes[indexP].Y));
+            shapes[indexA].inShell = true;
+            shapes[indexP].inShell = true;
+            int endPointIndex = indexA, nextIndex = 0;
+            
+            do
+            {
+                minCos = double.MaxValue;
+                for(int i = 0; i < shapes.Count;++i)
+                {
+                    if (i != indexA)
+                    {
+                        if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[i].X, shapes[i].Y)) < minCos)
                         {
-                            max = A;
+                            minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[i].X, shapes[i].Y));
+                            nextIndex = i;
                         }
                     }
+                }
+                
+                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexP].X, shapes[indexP].Y), new Point(shapes[nextIndex].X, shapes[nextIndex].Y));
+                shapes[nextIndex].inShell = true;
+                indexA = indexP;
+                indexP = nextIndex;
+            } while (indexP != endPointIndex);
+         
+            double Cos(Shape one, Shape two, Point three)
+            {
+                Point v1 = new Point(two.X - one.X,two.Y-one.Y);
+                Point v2 = new Point(two.X - three.X, two.Y - three.Y);
+                return (v1.X * v2.X + v1.Y * v2.Y) / (Math.Sqrt(v1.X * v1.X + v1.X * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
             }
-            Console.WriteLine("X: "+max.X + " Y: " + max.Y);
-
-            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
         }
+
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
