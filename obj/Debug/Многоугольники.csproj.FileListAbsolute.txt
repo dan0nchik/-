@@ -8,3 +8,18 @@ C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Мног�
 C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.exe
 C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.pdb
 C:\Users\Daniel\dev\dotnet core\Многоугольники\obj\Debug\Многоугольники.Form1.resources
+C:\Users\stupi\Desktop\--master\bin\Debug\Многоугольники.exe.config
+C:\Users\stupi\Desktop\--master\bin\Debug\Многоугольники.exe
+C:\Users\stupi\Desktop\--master\bin\Debug\Многоугольники.pdb
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.csprojAssemblyReference.cache
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.Form1.resources
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.Properties.Resources.resources
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.csproj.GenerateResource.cache
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.csproj.CoreCompileInputs.cache
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.exe
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.pdb
+C:\Users\stupi\Desktop\--master\bin\Debug\ScottPlot.dll
+C:\Users\stupi\Desktop\--master\bin\Debug\System.Drawing.Common.dll
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.csproj.CopyComplete
+C:\Users\stupi\Desktop\--master\bin\Debug\ScottPlot.WinForms.dll
+C:\Users\stupi\Desktop\--master\obj\Debug\Многоугольники.PlotForm.resources

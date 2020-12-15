@@ -39,6 +39,10 @@
             this.algorithmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.jarvisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.byDefinitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.plotToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jarvisToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.byDefinitionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bothToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,10 +53,11 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.typeToolStripMenuItem,
             this.colorToolStripMenuItem,
-            this.algorithmToolStripMenuItem});
+            this.algorithmToolStripMenuItem,
+            this.plotToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(1174, 40);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -63,27 +68,27 @@
             this.squareToolStripMenuItem,
             this.triangleToolStripMenuItem});
             this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
-            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 38);
+            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 36);
             this.typeToolStripMenuItem.Text = "Type";
             // 
             // circleToolStripMenuItem
             // 
             this.circleToolStripMenuItem.Name = "circleToolStripMenuItem";
-            this.circleToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.circleToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.circleToolStripMenuItem.Text = "Circle (default)";
             this.circleToolStripMenuItem.Click += new System.EventHandler(this.circleToolStripMenuItem_Click);
             // 
             // squareToolStripMenuItem
             // 
             this.squareToolStripMenuItem.Name = "squareToolStripMenuItem";
-            this.squareToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.squareToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.squareToolStripMenuItem.Text = "Square";
             this.squareToolStripMenuItem.Click += new System.EventHandler(this.squareToolStripMenuItem_Click);
             // 
             // triangleToolStripMenuItem
             // 
             this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
-            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.triangleToolStripMenuItem.Text = "Triangle";
             this.triangleToolStripMenuItem.Click += new System.EventHandler(this.triangleToolStripMenuItem_Click);
             // 
@@ -93,20 +98,20 @@
             this.linesToolStripMenuItem,
             this.pointsToolStripMenuItem});
             this.colorToolStripMenuItem.Name = "colorToolStripMenuItem";
-            this.colorToolStripMenuItem.Size = new System.Drawing.Size(92, 38);
+            this.colorToolStripMenuItem.Size = new System.Drawing.Size(92, 36);
             this.colorToolStripMenuItem.Text = "Color";
             // 
             // linesToolStripMenuItem
             // 
             this.linesToolStripMenuItem.Name = "linesToolStripMenuItem";
-            this.linesToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.linesToolStripMenuItem.Size = new System.Drawing.Size(213, 44);
             this.linesToolStripMenuItem.Text = "Lines";
             this.linesToolStripMenuItem.Click += new System.EventHandler(this.linesToolStripMenuItem_Click);
             // 
             // pointsToolStripMenuItem
             // 
             this.pointsToolStripMenuItem.Name = "pointsToolStripMenuItem";
-            this.pointsToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.pointsToolStripMenuItem.Size = new System.Drawing.Size(213, 44);
             this.pointsToolStripMenuItem.Text = "Points";
             this.pointsToolStripMenuItem.Click += new System.EventHandler(this.pointsToolStripMenuItem_Click);
             // 
@@ -116,33 +121,64 @@
             this.jarvisToolStripMenuItem,
             this.byDefinitionToolStripMenuItem});
             this.algorithmToolStripMenuItem.Name = "algorithmToolStripMenuItem";
-            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 38);
+            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 36);
             this.algorithmToolStripMenuItem.Text = " Algorithm";
             this.algorithmToolStripMenuItem.Click += new System.EventHandler(this.algorithmToolStripMenuItem_Click);
             // 
             // jarvisToolStripMenuItem
             // 
             this.jarvisToolStripMenuItem.Name = "jarvisToolStripMenuItem";
-            this.jarvisToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.jarvisToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
             this.jarvisToolStripMenuItem.Text = "Jarvis";
             this.jarvisToolStripMenuItem.Click += new System.EventHandler(this.jarvisToolStripMenuItem_Click);
             // 
             // byDefinitionToolStripMenuItem
             // 
             this.byDefinitionToolStripMenuItem.Name = "byDefinitionToolStripMenuItem";
-            this.byDefinitionToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.byDefinitionToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
             this.byDefinitionToolStripMenuItem.Text = "By definition";
             this.byDefinitionToolStripMenuItem.Click += new System.EventHandler(this.byDefinitionToolStripMenuItem_Click);
+            // 
+            // plotToolStripMenuItem
+            // 
+            this.plotToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.jarvisToolStripMenuItem1,
+            this.byDefinitionToolStripMenuItem1,
+            this.bothToolStripMenuItem});
+            this.plotToolStripMenuItem.Name = "plotToolStripMenuItem";
+            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 36);
+            this.plotToolStripMenuItem.Text = "Plot";
+            // 
+            // jarvisToolStripMenuItem1
+            // 
+            this.jarvisToolStripMenuItem1.Name = "jarvisToolStripMenuItem1";
+            this.jarvisToolStripMenuItem1.Size = new System.Drawing.Size(285, 44);
+            this.jarvisToolStripMenuItem1.Text = "Jarvis";
+            this.jarvisToolStripMenuItem1.Click += new System.EventHandler(this.jarvisToolStripMenuItem1_Click);
+            // 
+            // byDefinitionToolStripMenuItem1
+            // 
+            this.byDefinitionToolStripMenuItem1.Name = "byDefinitionToolStripMenuItem1";
+            this.byDefinitionToolStripMenuItem1.Size = new System.Drawing.Size(285, 44);
+            this.byDefinitionToolStripMenuItem1.Text = "By definition";
+            this.byDefinitionToolStripMenuItem1.Click += new System.EventHandler(this.byDefinitionToolStripMenuItem1_Click);
+            // 
+            // bothToolStripMenuItem
+            // 
+            this.bothToolStripMenuItem.Name = "bothToolStripMenuItem";
+            this.bothToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
+            this.bothToolStripMenuItem.Text = "Both";
+            this.bothToolStripMenuItem.Click += new System.EventHandler(this.bothToolStripMenuItem_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1174, 729);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Polygons";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
@@ -168,6 +204,10 @@
         private System.Windows.Forms.ToolStripMenuItem algorithmToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem jarvisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem byDefinitionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem plotToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jarvisToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem byDefinitionToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem bothToolStripMenuItem;
     }
 }
 
