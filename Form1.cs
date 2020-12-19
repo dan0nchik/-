@@ -441,6 +441,20 @@ namespace Многоугольники
         }
         private ColorDialog MyDialog = new ColorDialog();
 
+        public void OnRadiusChanged(object sender, RadiusEventArgs e)
+        {
+
+            Shape.Radius = e.Radius;
+            Refresh();
+        }
+
+        private void radiusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var radfrm = new RadiusForm();
+            radfrm.Show();
+            radfrm.RC += OnRadiusChanged;
+        }
+
         private void lineColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MyDialog.ShowDialog() == DialogResult.OK) { lineColor = MyDialog.Color; Refresh(); }

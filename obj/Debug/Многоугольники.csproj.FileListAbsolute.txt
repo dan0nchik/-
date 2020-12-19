@@ -38,3 +38,4 @@ C:\Users\stupi\Desktop\Polygons\obj\Debug\Многоугольники.csproj.Co
 C:\Users\stupi\Desktop\Polygons\obj\Debug\Многоугольники.csproj.CopyComplete
 C:\Users\stupi\Desktop\Polygons\obj\Debug\Многоугольники.exe
 C:\Users\stupi\Desktop\Polygons\obj\Debug\Многоугольники.pdb
+C:\Users\stupi\Desktop\Polygons\obj\Debug\Многоугольники.RadiusEventArgs.resources

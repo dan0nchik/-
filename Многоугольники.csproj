@@ -70,6 +70,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RadiusForm.cs" />
+    <Compile Include="RadiusForm.Designer.cs">
+      <DependentUpon>RadiusForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Shape.cs" />
     <Compile Include="Square.cs" />
     <Compile Include="Triangle.cs" />
@@ -88,6 +92,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RadiusForm.resx">
+      <DependentUpon>RadiusForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

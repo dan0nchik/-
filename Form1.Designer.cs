@@ -48,6 +48,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.typeToolStripMenuItem,
@@ -55,7 +56,7 @@
             this.plotToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1174, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(1174, 42);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -69,49 +70,50 @@
             this.pontColorToolStripMenuItem,
             this.radiusToolStripMenuItem});
             this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
-            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 36);
+            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 38);
             this.typeToolStripMenuItem.Text = "View";
             // 
             // circleToolStripMenuItem
             // 
             this.circleToolStripMenuItem.Name = "circleToolStripMenuItem";
-            this.circleToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.circleToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.circleToolStripMenuItem.Text = "Circle (default)";
             this.circleToolStripMenuItem.Click += new System.EventHandler(this.circleToolStripMenuItem_Click);
             // 
             // squareToolStripMenuItem
             // 
             this.squareToolStripMenuItem.Name = "squareToolStripMenuItem";
-            this.squareToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.squareToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.squareToolStripMenuItem.Text = "Square";
             this.squareToolStripMenuItem.Click += new System.EventHandler(this.squareToolStripMenuItem_Click);
             // 
             // triangleToolStripMenuItem
             // 
             this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
-            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.triangleToolStripMenuItem.Text = "Triangle";
             this.triangleToolStripMenuItem.Click += new System.EventHandler(this.triangleToolStripMenuItem_Click);
             // 
             // lineColorToolStripMenuItem
             // 
             this.lineColorToolStripMenuItem.Name = "lineColorToolStripMenuItem";
-            this.lineColorToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.lineColorToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.lineColorToolStripMenuItem.Text = "Line color";
             this.lineColorToolStripMenuItem.Click += new System.EventHandler(this.lineColorToolStripMenuItem_Click);
             // 
             // pontColorToolStripMenuItem
             // 
             this.pontColorToolStripMenuItem.Name = "pontColorToolStripMenuItem";
-            this.pontColorToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.pontColorToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.pontColorToolStripMenuItem.Text = "Pont color";
             this.pontColorToolStripMenuItem.Click += new System.EventHandler(this.pontColorToolStripMenuItem_Click);
             // 
             // radiusToolStripMenuItem
             // 
             this.radiusToolStripMenuItem.Name = "radiusToolStripMenuItem";
-            this.radiusToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.radiusToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.radiusToolStripMenuItem.Text = "Radius";
+            this.radiusToolStripMenuItem.Click += new System.EventHandler(this.radiusToolStripMenuItem_Click);
             // 
             // algorithmToolStripMenuItem
             // 
@@ -119,21 +121,21 @@
             this.jarvisToolStripMenuItem,
             this.byDefinitionToolStripMenuItem});
             this.algorithmToolStripMenuItem.Name = "algorithmToolStripMenuItem";
-            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 36);
+            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 38);
             this.algorithmToolStripMenuItem.Text = " Algorithm";
             this.algorithmToolStripMenuItem.Click += new System.EventHandler(this.algorithmToolStripMenuItem_Click);
             // 
             // jarvisToolStripMenuItem
             // 
             this.jarvisToolStripMenuItem.Name = "jarvisToolStripMenuItem";
-            this.jarvisToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.jarvisToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
             this.jarvisToolStripMenuItem.Text = "Jarvis";
             this.jarvisToolStripMenuItem.Click += new System.EventHandler(this.jarvisToolStripMenuItem_Click);
             // 
             // byDefinitionToolStripMenuItem
             // 
             this.byDefinitionToolStripMenuItem.Name = "byDefinitionToolStripMenuItem";
-            this.byDefinitionToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.byDefinitionToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
             this.byDefinitionToolStripMenuItem.Text = "By definition";
             this.byDefinitionToolStripMenuItem.Click += new System.EventHandler(this.byDefinitionToolStripMenuItem_Click);
             // 
@@ -144,7 +146,7 @@
             this.byDefinitionToolStripMenuItem1,
             this.bothToolStripMenuItem});
             this.plotToolStripMenuItem.Name = "plotToolStripMenuItem";
-            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 36);
+            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 38);
             this.plotToolStripMenuItem.Text = "Plot";
             // 
             // jarvisToolStripMenuItem1

@@ -83,7 +83,14 @@ namespace Многоугольники
         {
             r = 10;
         }
-
+        public static int Radius
+        {
+            get => r;
+            set
+            {
+                r = value;
+            }
+        }
 
         public abstract void Draw(Graphics g, Color color);
         public abstract bool IsInside(int xx, int yy);
