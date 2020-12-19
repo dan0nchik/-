@@ -33,9 +33,9 @@
             this.circleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.squareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.triangleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.colorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.linesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pointsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lineColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pontColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.radiusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.algorithmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.jarvisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.byDefinitionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,11 +48,9 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.typeToolStripMenuItem,
-            this.colorToolStripMenuItem,
             this.algorithmToolStripMenuItem,
             this.plotToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -66,10 +64,13 @@
             this.typeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.circleToolStripMenuItem,
             this.squareToolStripMenuItem,
-            this.triangleToolStripMenuItem});
+            this.triangleToolStripMenuItem,
+            this.lineColorToolStripMenuItem,
+            this.pontColorToolStripMenuItem,
+            this.radiusToolStripMenuItem});
             this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
             this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 36);
-            this.typeToolStripMenuItem.Text = "Type";
+            this.typeToolStripMenuItem.Text = "View";
             // 
             // circleToolStripMenuItem
             // 
@@ -92,28 +93,25 @@
             this.triangleToolStripMenuItem.Text = "Triangle";
             this.triangleToolStripMenuItem.Click += new System.EventHandler(this.triangleToolStripMenuItem_Click);
             // 
-            // colorToolStripMenuItem
+            // lineColorToolStripMenuItem
             // 
-            this.colorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.linesToolStripMenuItem,
-            this.pointsToolStripMenuItem});
-            this.colorToolStripMenuItem.Name = "colorToolStripMenuItem";
-            this.colorToolStripMenuItem.Size = new System.Drawing.Size(92, 36);
-            this.colorToolStripMenuItem.Text = "Color";
+            this.lineColorToolStripMenuItem.Name = "lineColorToolStripMenuItem";
+            this.lineColorToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.lineColorToolStripMenuItem.Text = "Line color";
+            this.lineColorToolStripMenuItem.Click += new System.EventHandler(this.lineColorToolStripMenuItem_Click);
             // 
-            // linesToolStripMenuItem
+            // pontColorToolStripMenuItem
             // 
-            this.linesToolStripMenuItem.Name = "linesToolStripMenuItem";
-            this.linesToolStripMenuItem.Size = new System.Drawing.Size(213, 44);
-            this.linesToolStripMenuItem.Text = "Lines";
-            this.linesToolStripMenuItem.Click += new System.EventHandler(this.linesToolStripMenuItem_Click);
+            this.pontColorToolStripMenuItem.Name = "pontColorToolStripMenuItem";
+            this.pontColorToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.pontColorToolStripMenuItem.Text = "Pont color";
+            this.pontColorToolStripMenuItem.Click += new System.EventHandler(this.pontColorToolStripMenuItem_Click);
             // 
-            // pointsToolStripMenuItem
+            // radiusToolStripMenuItem
             // 
-            this.pointsToolStripMenuItem.Name = "pointsToolStripMenuItem";
-            this.pointsToolStripMenuItem.Size = new System.Drawing.Size(213, 44);
-            this.pointsToolStripMenuItem.Text = "Points";
-            this.pointsToolStripMenuItem.Click += new System.EventHandler(this.pointsToolStripMenuItem_Click);
+            this.radiusToolStripMenuItem.Name = "radiusToolStripMenuItem";
+            this.radiusToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
+            this.radiusToolStripMenuItem.Text = "Radius";
             // 
             // algorithmToolStripMenuItem
             // 
@@ -128,14 +126,14 @@
             // jarvisToolStripMenuItem
             // 
             this.jarvisToolStripMenuItem.Name = "jarvisToolStripMenuItem";
-            this.jarvisToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
+            this.jarvisToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.jarvisToolStripMenuItem.Text = "Jarvis";
             this.jarvisToolStripMenuItem.Click += new System.EventHandler(this.jarvisToolStripMenuItem_Click);
             // 
             // byDefinitionToolStripMenuItem
             // 
             this.byDefinitionToolStripMenuItem.Name = "byDefinitionToolStripMenuItem";
-            this.byDefinitionToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
+            this.byDefinitionToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
             this.byDefinitionToolStripMenuItem.Text = "By definition";
             this.byDefinitionToolStripMenuItem.Click += new System.EventHandler(this.byDefinitionToolStripMenuItem_Click);
             // 
@@ -198,9 +196,6 @@
         private System.Windows.Forms.ToolStripMenuItem circleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem squareToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem triangleToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem linesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem pointsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem algorithmToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem jarvisToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem byDefinitionToolStripMenuItem;
@@ -208,6 +203,9 @@
         private System.Windows.Forms.ToolStripMenuItem jarvisToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem byDefinitionToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem bothToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem lineColorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pontColorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem radiusToolStripMenuItem;
     }
 }
 

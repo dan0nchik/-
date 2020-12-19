@@ -246,11 +246,6 @@ namespace Многоугольники
         {
             shapeFlag = 2;
         }
-        private ColorDialog MyDialog = new ColorDialog();
-        private void linesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (MyDialog.ShowDialog() == DialogResult.OK) { lineColor = MyDialog.Color; Refresh(); }
-        }
 
         private void algorithmToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -444,11 +439,18 @@ namespace Многоугольники
         {
             algoFlag = 0;
         }
+        private ColorDialog MyDialog = new ColorDialog();
 
-        private void pointsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void lineColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MyDialog.ShowDialog() == DialogResult.OK) { lineColor = MyDialog.Color; Refresh(); }
+        }
+
+        private void pontColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MyDialog.ShowDialog() == DialogResult.OK) { pointColor = MyDialog.Color; Refresh(); }
         }
+
     }
 }
 
