@@ -217,12 +217,17 @@ namespace Многоугольники
           
             if (cursorInHull)
             {
-                Console.WriteLine("MOVE");
+                foreach (Shape i in shapes.ToList())
+                {
+                    Console.WriteLine("MOVE");
+                    i.X = e.X;
+                    i.Y = e.Y;
+                    Refresh();
+                }
             }
             else
             foreach (Shape i in shapes.ToList())
             {
-
                 if (i.dragged == true)
                 {
                     i.X = e.X + i.ChosenX;
@@ -266,7 +271,7 @@ namespace Многоугольники
             var watch1 = System.Diagnostics.Stopwatch.StartNew();
             Random rand = new Random();
             PlotForm frm;
-            for (int i = 100; i < 500; i += 100)
+            for (int i = 100; i < 1000; i += 100)
             {
                 for (int j = 0; j < i; ++j)
                 {
@@ -300,7 +305,6 @@ namespace Многоугольники
                 }
                 seconds.Add(Convert.ToInt32(watch.Elapsed.TotalSeconds));
                 pointsRange.Add(i);
-                shapesToPlot.Clear();
             }
             if (algoName == "Both")
             {
@@ -443,14 +447,21 @@ namespace Многоугольники
 
         public void OnRadiusChanged(object sender, RadiusEventArgs e)
         {
-
             Shape.Radius = e.Radius;
             Refresh();
         }
-
+        private RadiusForm radfrm = new RadiusForm();
         private void radiusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var radfrm = new RadiusForm();
+            if (radfrm.IsAccessible == false)
+                radfrm.Activate();
+            if (radfrm.IsDisposed)    
+                radfrm = new  RadiusForm();     
+            if (radfrm.WindowState == FormWindowState.Maximized)      
+                radfrm.WindowState = FormWindowState.Normal;
+            if (radfrm.WindowState == FormWindowState.Minimized)
+                radfrm.WindowState = FormWindowState.Normal;
+            
             radfrm.Show();
             radfrm.RC += OnRadiusChanged;
         }
