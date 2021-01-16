@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.typeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.circleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,12 +44,15 @@
             this.jarvisToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.byDefinitionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.bothToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playStopButton = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.skipForwardButton = new System.Windows.Forms.Button();
+            this.skipBackwardButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.typeToolStripMenuItem,
@@ -56,7 +60,7 @@
             this.plotToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1174, 42);
+            this.menuStrip1.Size = new System.Drawing.Size(1174, 40);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -70,48 +74,48 @@
             this.pontColorToolStripMenuItem,
             this.radiusToolStripMenuItem});
             this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
-            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 38);
+            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 36);
             this.typeToolStripMenuItem.Text = "View";
             // 
             // circleToolStripMenuItem
             // 
             this.circleToolStripMenuItem.Name = "circleToolStripMenuItem";
-            this.circleToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.circleToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.circleToolStripMenuItem.Text = "Circle (default)";
             this.circleToolStripMenuItem.Click += new System.EventHandler(this.circleToolStripMenuItem_Click);
             // 
             // squareToolStripMenuItem
             // 
             this.squareToolStripMenuItem.Name = "squareToolStripMenuItem";
-            this.squareToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.squareToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.squareToolStripMenuItem.Text = "Square";
             this.squareToolStripMenuItem.Click += new System.EventHandler(this.squareToolStripMenuItem_Click);
             // 
             // triangleToolStripMenuItem
             // 
             this.triangleToolStripMenuItem.Name = "triangleToolStripMenuItem";
-            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.triangleToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.triangleToolStripMenuItem.Text = "Triangle";
             this.triangleToolStripMenuItem.Click += new System.EventHandler(this.triangleToolStripMenuItem_Click);
             // 
             // lineColorToolStripMenuItem
             // 
             this.lineColorToolStripMenuItem.Name = "lineColorToolStripMenuItem";
-            this.lineColorToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.lineColorToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.lineColorToolStripMenuItem.Text = "Line color";
             this.lineColorToolStripMenuItem.Click += new System.EventHandler(this.lineColorToolStripMenuItem_Click);
             // 
             // pontColorToolStripMenuItem
             // 
             this.pontColorToolStripMenuItem.Name = "pontColorToolStripMenuItem";
-            this.pontColorToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.pontColorToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.pontColorToolStripMenuItem.Text = "Pont color";
             this.pontColorToolStripMenuItem.Click += new System.EventHandler(this.pontColorToolStripMenuItem_Click);
             // 
             // radiusToolStripMenuItem
             // 
             this.radiusToolStripMenuItem.Name = "radiusToolStripMenuItem";
-            this.radiusToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.radiusToolStripMenuItem.Size = new System.Drawing.Size(304, 44);
             this.radiusToolStripMenuItem.Text = "Radius";
             this.radiusToolStripMenuItem.Click += new System.EventHandler(this.radiusToolStripMenuItem_Click);
             // 
@@ -121,7 +125,7 @@
             this.jarvisToolStripMenuItem,
             this.byDefinitionToolStripMenuItem});
             this.algorithmToolStripMenuItem.Name = "algorithmToolStripMenuItem";
-            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 38);
+            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 36);
             this.algorithmToolStripMenuItem.Text = " Algorithm";
             this.algorithmToolStripMenuItem.Click += new System.EventHandler(this.algorithmToolStripMenuItem_Click);
             // 
@@ -146,7 +150,7 @@
             this.byDefinitionToolStripMenuItem1,
             this.bothToolStripMenuItem});
             this.plotToolStripMenuItem.Name = "plotToolStripMenuItem";
-            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 38);
+            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 36);
             this.plotToolStripMenuItem.Text = "Plot";
             // 
             // jarvisToolStripMenuItem1
@@ -170,11 +174,51 @@
             this.bothToolStripMenuItem.Text = "Both";
             this.bothToolStripMenuItem.Click += new System.EventHandler(this.bothToolStripMenuItem_Click);
             // 
+            // playStopButton
+            // 
+            this.playStopButton.BackgroundImage = global::Многоугольники.Properties.Resources.play_button_arrowhead;
+            this.playStopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.playStopButton.Location = new System.Drawing.Point(383, 0);
+            this.playStopButton.Name = "playStopButton";
+            this.playStopButton.Size = new System.Drawing.Size(40, 40);
+            this.playStopButton.TabIndex = 1;
+            this.playStopButton.UseVisualStyleBackColor = true;
+            this.playStopButton.Click += new System.EventHandler(this.playStopButton_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer_Tick);
+            // 
+            // skipForwardButton
+            // 
+            this.skipForwardButton.BackgroundImage = global::Многоугольники.Properties.Resources.next;
+            this.skipForwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.skipForwardButton.Location = new System.Drawing.Point(429, 0);
+            this.skipForwardButton.Name = "skipForwardButton";
+            this.skipForwardButton.Size = new System.Drawing.Size(41, 40);
+            this.skipForwardButton.TabIndex = 2;
+            this.skipForwardButton.UseVisualStyleBackColor = true;
+            this.skipForwardButton.Click += new System.EventHandler(this.skipForwardButton_Click);
+            // 
+            // skipBackwardButton
+            // 
+            this.skipBackwardButton.BackgroundImage = global::Многоугольники.Properties.Resources.next__1_;
+            this.skipBackwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.skipBackwardButton.Location = new System.Drawing.Point(337, 0);
+            this.skipBackwardButton.Name = "skipBackwardButton";
+            this.skipBackwardButton.Size = new System.Drawing.Size(40, 40);
+            this.skipBackwardButton.TabIndex = 3;
+            this.skipBackwardButton.UseVisualStyleBackColor = true;
+            this.skipBackwardButton.Click += new System.EventHandler(this.skipBackwardButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1174, 729);
+            this.Controls.Add(this.skipBackwardButton);
+            this.Controls.Add(this.skipForwardButton);
+            this.Controls.Add(this.playStopButton);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
@@ -208,6 +252,10 @@
         private System.Windows.Forms.ToolStripMenuItem lineColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pontColorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem radiusToolStripMenuItem;
+        private System.Windows.Forms.Button playStopButton;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button skipForwardButton;
+        private System.Windows.Forms.Button skipBackwardButton;
     }
 }
 

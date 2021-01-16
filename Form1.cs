@@ -3,20 +3,30 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Многоугольники
 {
     public partial class Form1 : Form
     {
-        List<Shape> shapes = new List<Shape>();
+        List<Shape> shapes;
         private int shapeFlag, algoFlag;
-        private Color lineColor = Color.Black, pointColor = Color.Black;
-        bool cursorInHull = false;
+        private Color lineColor, pointColor;
+        private bool cursorInHull, showPlayIcon;
+        Timer timer;
+        Random random;
         public Form1()
-        {
+        {   
+            shapes = new List<Shape>();
             shapes.Add(new Circle(50, 50));
             InitializeComponent();
             DoubleBuffered = true;
+            timer = new Timer();
+            random = new Random();
+            lineColor = Color.Black;
+            pointColor = Color.Black;
+            timer.Tick += timer_Tick;
+            showPlayIcon = false;
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
@@ -194,8 +204,13 @@ namespace Многоугольники
                         shapes.Add(new Triangle(e.X, e.Y));
                         break;
                 }
-                cursorInHull = true;
-                Console.WriteLine("IN");
+                if (shapes.Count > 3)
+                    if (!CheckIfInHull(shapes))
+                    {
+                        Console.WriteLine("IN");
+                        shapes.RemoveAt(shapes.Count - 1);
+                        cursorInHull = true;
+                    }
                 Refresh();
             }
             if (e.Button == MouseButtons.Right)
@@ -214,20 +229,21 @@ namespace Многоугольники
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-          
+
             if (cursorInHull)
             {
                 foreach (Shape i in shapes.ToList())
                 {
-                    Console.WriteLine("MOVE");
-                    i.X = e.X;
-                    i.Y = e.Y;
-                    Refresh();
+                    
+                        i.X = e.X;
+                        i.Y = e.Y;
+                        Refresh();
+                    
                 }
             }
-            else
-            foreach (Shape i in shapes.ToList())
-            {
+                
+                foreach (Shape i in shapes.ToList())
+                {
                 if (i.dragged == true)
                 {
                     i.X = e.X + i.ChosenX;
@@ -271,7 +287,7 @@ namespace Многоугольники
             var watch1 = System.Diagnostics.Stopwatch.StartNew();
             Random rand = new Random();
             PlotForm frm;
-            for (int i = 100; i < 1000; i += 100)
+            for (int i = 10; i < 1000; i += 100)
             {
                 for (int j = 0; j < i; ++j)
                 {
@@ -369,8 +385,58 @@ namespace Многоугольники
                     indexA = indexP;
                     indexP = nextIndex;
                 } while (indexP != endPointIndex);
-
             }
+        }
+        private bool CheckIfInHull(List<Shape> shapes)
+        {
+
+            
+                int indexA = 0, indexP = 0, nextIndex = 0;
+                for (int i = 0; i < shapes.Count; ++i)
+                {
+                    if (shapes[indexA].Y < shapes[i].Y)
+                    {
+                        indexA = i;
+                    }
+                }
+                double minCos = double.MaxValue;
+                Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
+
+                for (int i = 0; i < shapes.Count; i++)
+                {
+                    if (i != indexA)
+                    {
+                        if (Cos(shapes[i], shapes[indexA], M) < minCos)
+                        {
+                            indexP = i;
+                            minCos = Cos(shapes[i], shapes[indexA], M);
+                        }
+                    }
+                }
+                shapes[indexA].inShell = true;
+                shapes[indexP].inShell = true;
+                int endPointIndex = indexA;
+                do
+                {
+                    minCos = double.MaxValue;
+                    for (int j = 0; j < shapes.Count; j++)
+                    {
+                        if (j != indexA)
+                        {
+                            if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
+                            {
+                                minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
+                                nextIndex = j;
+                            }
+                        }
+                    }
+
+                    shapes[nextIndex].inShell = true;
+                    indexA = indexP;
+                    indexP = nextIndex;
+                } while (indexP != endPointIndex);
+            if (!shapes.Last().inShell) return false;
+            return true;
         }
         private void ByDefinitionAlgorithm(List<Shape> shapes)
         {
@@ -464,6 +530,51 @@ namespace Многоугольники
             
             radfrm.Show();
             radfrm.RC += OnRadiusChanged;
+        }
+
+        private void playStopButton_Click(object sender, EventArgs e)
+        {
+            string imagePath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+            if (!showPlayIcon)
+            {
+                timer.Start();
+                playStopButton.BackgroundImage = Image.FromFile(imagePath + @"\Resources\pause.png");
+                showPlayIcon = true;
+            }
+            else
+            {
+                timer.Stop();
+                playStopButton.BackgroundImage = Image.FromFile(imagePath + @"\Resources\play.png");
+                showPlayIcon = false;
+            }
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            ShakeHull();
+            Refresh();
+        }
+
+        private void skipForwardButton_Click(object sender, EventArgs e)
+        {
+            if(timer.Interval > 10)
+                timer.Interval -= 10;
+        }
+
+        private void skipBackwardButton_Click(object sender, EventArgs e)
+        {
+            timer.Interval += 10;
+        }
+
+        private void ShakeHull()
+        {
+            foreach(var shape in shapes.ToList())
+            {
+                shape.X += random.Next(-2, 3);
+                shape.Y += random.Next(-2, 3);
+                if (!shape.inShell) shapes.Remove(shape);
+            }
+            
         }
 
         private void lineColorToolStripMenuItem_Click(object sender, EventArgs e)

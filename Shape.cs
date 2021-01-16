@@ -14,6 +14,7 @@ namespace Многоугольники
         public bool dragged;
         public bool inShell;
         protected static Color lineC, pointC;
+        public bool hullDragged;
         public int X
         {
             get => x;
