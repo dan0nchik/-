@@ -8,6 +8,7 @@ using static Многоугольники.Form1;
 
 namespace Многоугольники
 {
+    [Serializable()]
     public class Triangle : Shape
     {
 

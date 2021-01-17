@@ -8,6 +8,7 @@ using static Многоугольники.Form1;
 
 namespace Многоугольники
 {
+    [Serializable()]
     public class Square : Shape
     {
         public Square(int xx, int yy) : base(xx, yy)

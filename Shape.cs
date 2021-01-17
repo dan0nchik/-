@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Многоугольники
 {
+    [Serializable()]
     public abstract class Shape
     {
         protected int x, y, chosenX, chosenY;
@@ -47,7 +48,6 @@ namespace Многоугольники
                 chosenY = value;
             }
         }
-
         public int R
         {
             get => r;

@@ -4,21 +4,31 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Многоугольники
 {
+    
     public partial class Form1 : Form
     {
+        
         List<Shape> shapes;
         private int shapeFlag, algoFlag;
         private Color lineColor, pointColor;
         private bool cursorInHull, showPlayIcon;
+        private string projectPath, saveFilePath;
         Timer timer;
+        BinaryFormatter formatter;
+        FileStream fileStream;
         Random random;
+
         public Form1()
-        {   
-            shapes = new List<Shape>();
-            shapes.Add(new Circle(50, 50));
+        {
+            projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
+            shapes = new List<Shape>
+            {
+                new Circle(50, 50)
+            };
             InitializeComponent();
             DoubleBuffered = true;
             timer = new Timer();
@@ -27,6 +37,9 @@ namespace Многоугольники
             pointColor = Color.Black;
             timer.Tick += timer_Tick;
             showPlayIcon = false;
+            formatter = new BinaryFormatter();
+            saveFilePath = "";
+            KeyDown += Form1_KeyDown;
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
@@ -118,7 +131,7 @@ namespace Многоугольники
                 }
 
             }
-        }
+        }   
 
         private void JarvisAlgorithm(PaintEventArgs e, Color lineColor)
         {
@@ -534,17 +547,16 @@ namespace Многоугольники
 
         private void playStopButton_Click(object sender, EventArgs e)
         {
-            string imagePath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
             if (!showPlayIcon)
             {
                 timer.Start();
-                playStopButton.BackgroundImage = Image.FromFile(imagePath + @"\Resources\pause.png");
+                playStopButton.BackgroundImage = Image.FromFile(projectPath + @"\Resources\pause.png");
                 showPlayIcon = true;
             }
             else
             {
                 timer.Stop();
-                playStopButton.BackgroundImage = Image.FromFile(imagePath + @"\Resources\play.png");
+                playStopButton.BackgroundImage = Image.FromFile(projectPath + @"\Resources\play.png");
                 showPlayIcon = false;
             }
         }
@@ -564,6 +576,86 @@ namespace Многоугольники
         private void skipBackwardButton_Click(object sender, EventArgs e)
         {
             timer.Interval += 10;
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Open();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Save(saveFilePath);
+        }
+        private void Save(string path)
+        {
+            if (path != "")
+            {
+                fileStream = new FileStream(path, FileMode.OpenOrCreate);
+                List<object> settings = new List<object>{
+                    shapes,
+                    Shape.Radius,
+                    pointColor,
+                    lineColor
+                };
+                formatter.Serialize(fileStream, settings);
+                fileStream.Close();
+            }
+        }
+        private void Open()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    fileStream = (FileStream)openFileDialog.OpenFile();
+                    List<object> settings = (List<object>)formatter.Deserialize(fileStream);
+                    
+                    shapes = (List<Shape>)settings[0];
+                    Shape.Radius = (int)settings[1];
+                    pointColor = (Color)settings[2];
+                    lineColor = (Color)settings[3];
+
+                    saveFilePath = openFileDialog.FileName;
+                    Refresh();
+                    fileStream.Close();
+                }
+            }
+        }
+        private void SaveAs()
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = "Text file|*.txt",
+                Title = "Save current session",
+                FileName = "session"
+            };
+            saveFileDialog1.ShowDialog();
+            if (saveFileDialog1.FileName != "")
+            {
+                Save(saveFileDialog1.FileName);
+            }
+        }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
+            {
+                Save(saveFilePath);
+            }
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
+            {
+                Open();
+            }
         }
 
         private void ShakeHull()

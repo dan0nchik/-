@@ -44,10 +44,15 @@
             this.jarvisToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.byDefinitionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.bothToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playStopButton = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.skipForwardButton = new System.Windows.Forms.Button();
             this.skipBackwardButton = new System.Windows.Forms.Button();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +62,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.typeToolStripMenuItem,
             this.algorithmToolStripMenuItem,
-            this.plotToolStripMenuItem});
+            this.plotToolStripMenuItem,
+            this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1174, 40);
@@ -74,7 +80,7 @@
             this.pontColorToolStripMenuItem,
             this.radiusToolStripMenuItem});
             this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
-            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 36);
+            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 44);
             this.typeToolStripMenuItem.Text = "View";
             // 
             // circleToolStripMenuItem
@@ -125,7 +131,7 @@
             this.jarvisToolStripMenuItem,
             this.byDefinitionToolStripMenuItem});
             this.algorithmToolStripMenuItem.Name = "algorithmToolStripMenuItem";
-            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 36);
+            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 44);
             this.algorithmToolStripMenuItem.Text = " Algorithm";
             this.algorithmToolStripMenuItem.Click += new System.EventHandler(this.algorithmToolStripMenuItem_Click);
             // 
@@ -150,7 +156,7 @@
             this.byDefinitionToolStripMenuItem1,
             this.bothToolStripMenuItem});
             this.plotToolStripMenuItem.Name = "plotToolStripMenuItem";
-            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 36);
+            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 44);
             this.plotToolStripMenuItem.Text = "Plot";
             // 
             // jarvisToolStripMenuItem1
@@ -174,11 +180,42 @@
             this.bothToolStripMenuItem.Text = "Both";
             this.bothToolStripMenuItem.Click += new System.EventHandler(this.bothToolStripMenuItem_Click);
             // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.openToolStripMenuItem,
+            this.saveAsToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 36);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.saveToolStripMenuItem.Text = "Save (Ctrl+S)";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.openToolStripMenuItem.Text = "Open (Ctrl+O)";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // saveAsToolStripMenuItem
+            // 
+            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(231, 44);
+            this.saveAsToolStripMenuItem.Text = "Save As";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
             // playStopButton
             // 
             this.playStopButton.BackgroundImage = global::Многоугольники.Properties.Resources.play_button_arrowhead;
             this.playStopButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.playStopButton.Location = new System.Drawing.Point(383, 0);
+            this.playStopButton.Location = new System.Drawing.Point(466, 0);
             this.playStopButton.Name = "playStopButton";
             this.playStopButton.Size = new System.Drawing.Size(40, 40);
             this.playStopButton.TabIndex = 1;
@@ -193,7 +230,7 @@
             // 
             this.skipForwardButton.BackgroundImage = global::Многоугольники.Properties.Resources.next;
             this.skipForwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.skipForwardButton.Location = new System.Drawing.Point(429, 0);
+            this.skipForwardButton.Location = new System.Drawing.Point(512, 0);
             this.skipForwardButton.Name = "skipForwardButton";
             this.skipForwardButton.Size = new System.Drawing.Size(41, 40);
             this.skipForwardButton.TabIndex = 2;
@@ -204,7 +241,7 @@
             // 
             this.skipBackwardButton.BackgroundImage = global::Многоугольники.Properties.Resources.next__1_;
             this.skipBackwardButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.skipBackwardButton.Location = new System.Drawing.Point(337, 0);
+            this.skipBackwardButton.Location = new System.Drawing.Point(420, 0);
             this.skipBackwardButton.Name = "skipBackwardButton";
             this.skipBackwardButton.Size = new System.Drawing.Size(40, 40);
             this.skipBackwardButton.TabIndex = 3;
@@ -220,6 +257,7 @@
             this.Controls.Add(this.skipForwardButton);
             this.Controls.Add(this.playStopButton);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Polygons";
@@ -256,6 +294,11 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button skipForwardButton;
         private System.Windows.Forms.Button skipBackwardButton;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 
