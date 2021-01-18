@@ -47,9 +47,9 @@ namespace Многоугольники
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            
                 if (shapes.Count > 2)
                 {
-
                     foreach (Shape shape in shapes)
                         shape.inShell = false;
                     if (algoFlag == 0)
@@ -229,28 +229,16 @@ namespace Многоугольники
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-
-            if (cursorInHull)
-            {
                 foreach (Shape i in shapes.ToList())
                 {
-                    
-                        i.X = e.X;
-                        i.Y = e.Y;
+                    if (i.dragged == true)
+                    {
+                        i.X = e.X + i.ChosenX;
+                        i.Y = e.Y + i.ChosenY;
                         Refresh();
-                    
+                    }
                 }
-            }
-                
-                foreach (Shape i in shapes.ToList())
-                {
-                if (i.dragged == true)
-                {
-                    i.X = e.X + i.ChosenX;
-                    i.Y = e.Y + i.ChosenY;
-                    Refresh();
-                }
-            }
+            
         }
 
         private void circleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -336,7 +324,6 @@ namespace Многоугольники
         {
             GenerateShapes("Jarvis");
         }
-
         private void JarvisAlgorithm(List<Shape> shapes) 
         {
 
@@ -566,6 +553,91 @@ namespace Многоугольники
             timer.Interval += 10;
         }
 
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveAs();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Open();
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFilePath != "")
+                Save(saveFilePath);
+            else
+                SaveAs();
+        }
+        private void Save(string path)
+        {
+            if (path != "")
+            {
+                fileStream = new FileStream(path, FileMode.OpenOrCreate);
+                List<object> settings = new List<object>{
+                    shapes,
+                    Shape.Radius,
+                    pointColor,
+                    lineColor
+                };
+                formatter.Serialize(fileStream, settings);
+                fileStream.Close();
+            }
+        }
+        private void Open()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.InitialDirectory = "c:\\";
+                openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 2;
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    fileStream = (FileStream)openFileDialog.OpenFile();
+                    List<object> settings = (List<object>)formatter.Deserialize(fileStream);
+                    
+                    shapes = (List<Shape>)settings[0];
+                    Shape.Radius = (int)settings[1];
+                    pointColor = (Color)settings[2];
+                    lineColor = (Color)settings[3];
+
+                    saveFilePath = openFileDialog.FileName;
+                    Refresh();
+                    fileStream.Close();
+                }
+            }
+        }
+        private void SaveAs()
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = "Text file|*.txt",
+                Title = "Save current session",
+                FileName = "session"
+            };
+            saveFileDialog1.ShowDialog();
+            if (saveFileDialog1.FileName != "")
+            {
+                Save(saveFileDialog1.FileName);
+            }
+        }
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
+            {
+                if (saveFilePath != "")
+                    Save(saveFilePath);
+                else
+                    SaveAs();
+            }
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
+            {
+                Open();
+            }
+        }
         private void ShakeHull()
         {
             foreach(var shape in shapes.ToList())
