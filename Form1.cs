@@ -8,27 +8,21 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Многоугольники
 {
-    
     public partial class Form1 : Form
     {
-        
         List<Shape> shapes;
         private int shapeFlag, algoFlag;
         private Color lineColor, pointColor;
         private bool cursorInHull, showPlayIcon;
-        private string projectPath, saveFilePath;
         Timer timer;
-        BinaryFormatter formatter;
-        FileStream fileStream;
         Random random;
-
+        FileStream fileStream;
+        BinaryFormatter formatter;
+        private string saveFilePath;
         public Form1()
-        {
-            projectPath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
-            shapes = new List<Shape>
-            {
-                new Circle(50, 50)
-            };
+        {   
+            shapes = new List<Shape>();
+            shapes.Add(new Circle(50, 50));
             InitializeComponent();
             DoubleBuffered = true;
             timer = new Timer();
@@ -37,8 +31,8 @@ namespace Многоугольники
             pointColor = Color.Black;
             timer.Tick += timer_Tick;
             showPlayIcon = false;
-            formatter = new BinaryFormatter();
             saveFilePath = "";
+            formatter = new BinaryFormatter();
             KeyDown += Form1_KeyDown;
         }
 
@@ -131,7 +125,7 @@ namespace Многоугольники
                 }
 
             }
-        }   
+        }
 
         private void JarvisAlgorithm(PaintEventArgs e, Color lineColor)
         {
@@ -534,16 +528,17 @@ namespace Многоугольники
 
         private void playStopButton_Click(object sender, EventArgs e)
         {
+            string imagePath = Directory.GetParent(Environment.CurrentDirectory).Parent.FullName;
             if (!showPlayIcon)
             {
                 timer.Start();
-                playStopButton.BackgroundImage = Image.FromFile(projectPath + @"\Resources\pause.png");
+                playStopButton.BackgroundImage = Image.FromFile(imagePath + @"\Resources\pause.png");
                 showPlayIcon = true;
             }
             else
             {
                 timer.Stop();
-                playStopButton.BackgroundImage = Image.FromFile(projectPath + @"\Resources\play.png");
+                playStopButton.BackgroundImage = Image.FromFile(imagePath + @"\Resources\play.png");
                 showPlayIcon = false;
             }
         }
