@@ -60,9 +60,9 @@ namespace Многоугольники
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
+            
                 if (shapes.Count > 2)
                 {
-
                     foreach (Shape shape in shapes)
                         shape.inShell = false;
                     if (algoFlag == 0)
@@ -242,28 +242,16 @@ namespace Многоугольники
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-
-            if (cursorInHull)
-            {
                 foreach (Shape i in shapes.ToList())
                 {
-                    
-                        i.X = e.X;
-                        i.Y = e.Y;
+                    if (i.dragged == true)
+                    {
+                        i.X = e.X + i.ChosenX;
+                        i.Y = e.Y + i.ChosenY;
                         Refresh();
-                    
+                    }
                 }
-            }
-                
-                foreach (Shape i in shapes.ToList())
-                {
-                if (i.dragged == true)
-                {
-                    i.X = e.X + i.ChosenX;
-                    i.Y = e.Y + i.ChosenY;
-                    Refresh();
-                }
-            }
+            
         }
 
         private void circleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -349,7 +337,6 @@ namespace Многоугольники
         {
             GenerateShapes("Jarvis");
         }
-
         private void JarvisAlgorithm(List<Shape> shapes) 
         {
 
@@ -590,7 +577,10 @@ namespace Многоугольники
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Save(saveFilePath);
+            if (saveFilePath != "")
+                Save(saveFilePath);
+            else
+                SaveAs();
         }
         private void Save(string path)
         {
@@ -650,14 +640,16 @@ namespace Многоугольники
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
             {
-                Save(saveFilePath);
+                if (saveFilePath != "")
+                    Save(saveFilePath);
+                else
+                    SaveAs();
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
             {
                 Open();
             }
         }
-
         private void ShakeHull()
         {
             foreach(var shape in shapes.ToList())
