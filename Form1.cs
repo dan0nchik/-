@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Drawing.Drawing2D;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace Многоугольники
 {
@@ -16,14 +15,15 @@ namespace Многоугольники
         List<Shape> shapes;
         private int shapeFlag, algoFlag;
         private Color lineColor, pointColor;
-        private bool cursorInHull, showPlayIcon;
+        private bool saved, showPlayIcon;
         System.Windows.Forms.Timer timer;
         Random random;
         FileStream fileStream;
         BinaryFormatter formatter;
         private string saveFilePath;
+
         public Form1()
-        {   
+        {
             shapes = new List<Shape>();
             shapes.Add(new Circle(50, 50));
             InitializeComponent();
@@ -37,6 +37,30 @@ namespace Многоугольники
             saveFilePath = "";
             formatter = new BinaryFormatter();
             KeyDown += Form1_KeyDown;
+            FormClosing += Form1_Closing;
+        }
+
+        private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!saved)
+            {
+                MessageBox.Show("You have unsaved changes. Do you want to save them?", "Polygons", MessageBoxButtons.YesNo);
+                if (DialogResult == DialogResult.No)
+                {
+                    Console.WriteLine("NO");
+                    
+                    Close();
+                }
+                else
+                {
+                    Console.WriteLine("YES");
+                    Save(saveFilePath);
+                }
+            }
+            else
+            {
+                Close();
+            }
         }
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
@@ -47,28 +71,30 @@ namespace Многоугольники
                 if (shapes.Count > 3)
                     if (!i.inShell) { shapes.Remove(i); Refresh(); }
             }
-            cursorInHull = false;
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-            
-                if (shapes.Count > 2)
-                {
+
+            if (shapes.Count > 2)
+            {
                 foreach (Shape shape in shapes)
                     shape.inShell = false;
                 if (algoFlag == 0)
-                        ParallelJarvis(e, lineColor);
-                    else
-                        JarvisAlgorithm(e, lineColor);
+                {
+                    ParallelJarvis(shapes);
                 }
-                foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
-            
+                else
+                    JarvisAlgorithm(e, lineColor);
+            }
+            foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
+            if (shapes.Count != 0)
+                saved = false;
         }
 
         private void ByDefinitionAlgorithm(PaintEventArgs e, Color lineColor)
@@ -132,7 +158,7 @@ namespace Многоугольники
 
         private void JarvisAlgorithm(PaintEventArgs e, Color lineColor)
         {
-            
+
             int indexA = 0, indexP = 0, nextIndex = 0;
             for (int i = 0; i < shapes.Count; ++i)
             {
@@ -149,7 +175,7 @@ namespace Многоугольники
                 if (i != indexA)
                 {
                     if (Cos(shapes[i], shapes[indexA], M) < minCos)
-                    {   
+                    {
                         indexP = i;
                         minCos = Cos(shapes[i], shapes[indexA], M);
                     }
@@ -179,36 +205,25 @@ namespace Многоугольники
                 indexA = indexP;
                 indexP = nextIndex;
             } while (indexP != endPointIndex);
-            
+
         }
 
-        private async void ParallelJarvis(PaintEventArgs e, Color lineColor)
+
+
+        private void ParallelJarvis(List<Shape> shapes)
         {
+
             int indexA = 0, indexA1 = 0, indexP = 0, nextIndex = 0, indexP1 = 0, nextIndex1 = 0;
             double minCos = double.MaxValue;
             Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-            Point M1 = new Point(shapes[indexA].X + 1000, shapes[indexA].Y);
-            int normCount = 0, reversedCount = 0;
-            int defbarrier, barrier, barrier1;
+            Point M1 = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
 
-            if (shapes.Count % 2 == 0)
+            //схема алгоритма https://i.imgur.com/LiRMF0t.jpg
+
+            async void Core()
             {
-                defbarrier = shapes.Count / 2;
-                barrier = defbarrier;
-                barrier1 = defbarrier;
-            }
 
-            else
-            {
-                defbarrier = (shapes.Count - 1) / 2;
-                barrier = defbarrier + 1;
-                barrier1 = defbarrier;
-            }
-
-
-             void Core()
-            {
-                
+                await Task.Run(() =>
                 {
                     for (int i = 0; i < shapes.Count; ++i)
                     {
@@ -230,8 +245,6 @@ namespace Многоугольники
                             }
                         }
                     }
-                    e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexA].X, shapes[indexA].Y), new Point(shapes[indexP].X, shapes[indexP].Y));
-                    normCount++;
                     shapes[indexA].inShell = true;
                     shapes[indexP].inShell = true;
 
@@ -250,19 +263,18 @@ namespace Многоугольники
                             }
                         }
 
-                        e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexP].X, shapes[indexP].Y), new Point(shapes[nextIndex].X, shapes[nextIndex].Y));
                         shapes[nextIndex].inShell = true;
                         indexA = indexP;
                         indexP = nextIndex;
-                        normCount++;
                     } while (indexP != indexA1);
-                }
-                
+                });
+
+
             }
 
-            void Core1()
+            async void Core1()
             {
-               
+                await Task.Run(() =>
                 {
                     for (int i = 0; i < shapes.Count; ++i)
                     {
@@ -285,10 +297,8 @@ namespace Многоугольники
                             }
                         }
                     }
-                    e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexA1].X, shapes[indexA1].Y), new Point(shapes[indexP1].X, shapes[indexP1].Y));
                     shapes[indexP1].inShell = true;
                     shapes[indexA1].inShell = true;
-                    reversedCount++;
                     do
                     {
                         minCos = double.MaxValue;
@@ -304,26 +314,36 @@ namespace Многоугольники
                             }
                         }
 
-                        e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexP1].X, shapes[indexP1].Y), new Point(shapes[nextIndex1].X, shapes[nextIndex1].Y));
                         shapes[nextIndex1].inShell = true;
                         indexA1 = indexP1;
                         indexP1 = nextIndex1;
-                        reversedCount++;
                     }
                     while (indexP1 != indexA);
 
-                }
+                });
             }
+
+            
+            //Thread thr1 = new Thread(Core);
+            //Thread thr2 = new Thread(Core1);
+            //thr1.Start();
+            //thr2.Start();
+
+            
+            //Task task1 = Task.Factory.StartNew(() => Core());
+            //Task task2  = Task.Factory.StartNew(() => Core1());
+            //Task.WaitAll(task1, task2);
 
             Core();
             Core1();
 
         }
-        double Cos(Shape one, Shape two, Point three)
+
+        private double Cos(Shape one, Shape two, Point three)
         {
-                Point v1 = new Point(two.X - one.X, two.Y - one.Y);
-                Point v2 = new Point(two.X - three.X, two.Y - three.Y);
-                return ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
+            Point v1 = new Point(two.X - one.X, two.Y - one.Y);
+            Point v2 = new Point(two.X - three.X, two.Y - three.Y);
+            return ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -337,7 +357,7 @@ namespace Многоугольники
                     shifted = true;
                     i.ChosenX = i.X - e.X;
                     i.ChosenY = i.Y - e.Y;
-                } 
+                }
             }
             if (shifted == false)
             {
@@ -358,7 +378,7 @@ namespace Многоугольники
                     {
                         Console.WriteLine("IN");
                         shapes.RemoveAt(shapes.Count - 1);
-                        cursorInHull = true;
+
                     }
                 Refresh();
             }
@@ -378,16 +398,16 @@ namespace Многоугольники
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
-                foreach (Shape i in shapes.ToList())
+            foreach (Shape i in shapes.ToList())
+            {
+                if (i.dragged == true)
                 {
-                    if (i.dragged == true)
-                    {
-                        i.X = e.X + i.ChosenX;
-                        i.Y = e.Y + i.ChosenY;
-                        Refresh();
-                    }
+                    i.X = e.X + i.ChosenX;
+                    i.Y = e.Y + i.ChosenY;
+                    Refresh();
                 }
-            
+            }
+
         }
 
         private void circleToolStripMenuItem_Click(object sender, EventArgs e)
@@ -424,7 +444,7 @@ namespace Многоугольники
             var watch1 = System.Diagnostics.Stopwatch.StartNew();
             Random rand = new Random();
             PlotForm frm;
-            for (int i = 10; i < 1000; i += 100)
+            for (int i = 10; i < 10000; i += 100)
             {
                 for (int j = 0; j < i; ++j)
                 {
@@ -452,14 +472,24 @@ namespace Многоугольники
                     ByDefinitionAlgorithm(shapesToPlot);
                     watch1.Stop();
                 }
-                if (algoName == "Both")
+                if(algoName == "Jarvis vs Parallel Jarvis")
+                {
+                    watch.Start();
+                    JarvisAlgorithm(shapesToPlot);
+                    watch.Stop();
+
+                    watch1.Start();
+                    ParallelJarvis(shapesToPlot);
+                    watch1.Stop();
+                }
+                if (algoName == "Both" || algoName == "Jarvis vs Parallel Jarvis")
                 {
                     seconds1.Add(Convert.ToInt32(watch1.Elapsed.TotalSeconds));
                 }
                 seconds.Add(Convert.ToInt32(watch.Elapsed.TotalSeconds));
                 pointsRange.Add(i);
             }
-            if (algoName == "Both")
+            if (algoName == "Both" || algoName == "Jarvis vs Parallel Jarvis")
             {
                 frm = new PlotForm(algoName, seconds.ToArray(), seconds1.ToArray(), pointsRange.ToArray());
             }
@@ -473,7 +503,7 @@ namespace Многоугольники
         {
             GenerateShapes("Jarvis");
         }
-        private void JarvisAlgorithm(List<Shape> shapes) 
+        private void JarvisAlgorithm(List<Shape> shapes)
         {
 
             {
@@ -526,51 +556,51 @@ namespace Многоугольники
         private bool CheckIfInHull(List<Shape> shapes)
         {
 
-            
-                int indexA = 0, indexP = 0, nextIndex = 0;
-                for (int i = 0; i < shapes.Count; ++i)
+
+            int indexA = 0, indexP = 0, nextIndex = 0;
+            for (int i = 0; i < shapes.Count; ++i)
+            {
+                if (shapes[indexA].Y < shapes[i].Y)
                 {
-                    if (shapes[indexA].Y < shapes[i].Y)
+                    indexA = i;
+                }
+            }
+            double minCos = double.MaxValue;
+            Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
+
+            for (int i = 0; i < shapes.Count; i++)
+            {
+                if (i != indexA)
+                {
+                    if (Cos(shapes[i], shapes[indexA], M) < minCos)
                     {
-                        indexA = i;
+                        indexP = i;
+                        minCos = Cos(shapes[i], shapes[indexA], M);
                     }
                 }
-                double minCos = double.MaxValue;
-                Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-
-                for (int i = 0; i < shapes.Count; i++)
+            }
+            shapes[indexA].inShell = true;
+            shapes[indexP].inShell = true;
+            int endPointIndex = indexA;
+            do
+            {
+                minCos = double.MaxValue;
+                for (int j = 0; j < shapes.Count; j++)
                 {
-                    if (i != indexA)
+                    if (j != indexA)
                     {
-                        if (Cos(shapes[i], shapes[indexA], M) < minCos)
+                        if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
                         {
-                            indexP = i;
-                            minCos = Cos(shapes[i], shapes[indexA], M);
+                            minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
+                            nextIndex = j;
                         }
                     }
                 }
-                shapes[indexA].inShell = true;
-                shapes[indexP].inShell = true;
-                int endPointIndex = indexA;
-                do
-                {
-                    minCos = double.MaxValue;
-                    for (int j = 0; j < shapes.Count; j++)
-                    {
-                        if (j != indexA)
-                        {
-                            if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
-                            {
-                                minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
-                                nextIndex = j;
-                            }
-                        }
-                    }
 
-                    shapes[nextIndex].inShell = true;
-                    indexA = indexP;
-                    indexP = nextIndex;
-                } while (indexP != endPointIndex);
+                shapes[nextIndex].inShell = true;
+                indexA = indexP;
+                indexP = nextIndex;
+            } while (indexP != endPointIndex);
             if (!shapes.Last().inShell) return false;
             return true;
         }
@@ -645,6 +675,7 @@ namespace Многоугольники
         {
             algoFlag = 0;
         }
+
         private ColorDialog MyDialog = new ColorDialog();
 
         public void OnRadiusChanged(object sender, RadiusEventArgs e)
@@ -657,13 +688,13 @@ namespace Многоугольники
         {
             if (radfrm.IsAccessible == false)
                 radfrm.Activate();
-            if (radfrm.IsDisposed)    
-                radfrm = new  RadiusForm();     
-            if (radfrm.WindowState == FormWindowState.Maximized)      
+            if (radfrm.IsDisposed)
+                radfrm = new RadiusForm();
+            if (radfrm.WindowState == FormWindowState.Maximized)
                 radfrm.WindowState = FormWindowState.Normal;
             if (radfrm.WindowState == FormWindowState.Minimized)
                 radfrm.WindowState = FormWindowState.Normal;
-            
+
             radfrm.Show();
             radfrm.RC += OnRadiusChanged;
         }
@@ -693,7 +724,7 @@ namespace Многоугольники
 
         private void skipForwardButton_Click(object sender, EventArgs e)
         {
-            if(timer.Interval > 10)
+            if (timer.Interval > 10)
                 timer.Interval -= 10;
         }
 
@@ -732,6 +763,8 @@ namespace Многоугольники
                 };
                 formatter.Serialize(fileStream, settings);
                 fileStream.Close();
+                saveFilePath = path;
+                saved = true;
             }
         }
         private void Open()
@@ -747,7 +780,7 @@ namespace Многоугольники
                 {
                     fileStream = (FileStream)openFileDialog.OpenFile();
                     List<object> settings = (List<object>)formatter.Deserialize(fileStream);
-                    
+
                     shapes = (List<Shape>)settings[0];
                     Shape.Radius = (int)settings[1];
                     pointColor = (Color)settings[2];
@@ -771,6 +804,8 @@ namespace Многоугольники
             if (saveFileDialog1.FileName != "")
             {
                 Save(saveFileDialog1.FileName);
+                saved = true;
+                saveFilePath = saveFileDialog1.FileName;
             }
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -787,15 +822,47 @@ namespace Многоугольники
                 Open();
             }
         }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saved)
+            {
+                shapes.Clear();
+                Refresh();
+            }
+            else
+            {
+                MessageBox.Show("You have unsaved changes. Do you want to save them?", "Polygons", MessageBoxButtons.YesNo);
+                if (DialogResult == DialogResult.Yes)
+                {
+                    SaveAs();
+                    shapes.Clear();
+                    Refresh();
+                }
+                else
+                {
+                    shapes.Clear();
+                    Refresh();
+                }
+            }
+
+
+        }
+
+        private void jarvisVsParallelJarvisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GenerateShapes("Jarvis vs Parallel Jarvis");
+        }
+
         private void ShakeHull()
         {
-            foreach(var shape in shapes.ToList())
+            foreach (var shape in shapes.ToList())
             {
                 shape.X += random.Next(-2, 3);
                 shape.Y += random.Next(-2, 3);
                 if (!shape.inShell) shapes.Remove(shape);
             }
-            
+
         }
 
         private void lineColorToolStripMenuItem_Click(object sender, EventArgs e)
@@ -810,4 +877,3 @@ namespace Многоугольники
 
     }
 }
-

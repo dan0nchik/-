@@ -48,16 +48,19 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.playStopButton = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.skipForwardButton = new System.Windows.Forms.Button();
             this.skipBackwardButton = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.jarvisVsParallelJarvisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.typeToolStripMenuItem,
@@ -66,7 +69,7 @@
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1174, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(1174, 42);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -80,7 +83,7 @@
             this.pontColorToolStripMenuItem,
             this.radiusToolStripMenuItem});
             this.typeToolStripMenuItem.Name = "typeToolStripMenuItem";
-            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 44);
+            this.typeToolStripMenuItem.Size = new System.Drawing.Size(86, 38);
             this.typeToolStripMenuItem.Text = "View";
             // 
             // circleToolStripMenuItem
@@ -131,7 +134,7 @@
             this.jarvisToolStripMenuItem,
             this.byDefinitionToolStripMenuItem});
             this.algorithmToolStripMenuItem.Name = "algorithmToolStripMenuItem";
-            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 44);
+            this.algorithmToolStripMenuItem.Size = new System.Drawing.Size(148, 38);
             this.algorithmToolStripMenuItem.Text = " Algorithm";
             this.algorithmToolStripMenuItem.Click += new System.EventHandler(this.algorithmToolStripMenuItem_Click);
             // 
@@ -154,29 +157,30 @@
             this.plotToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.jarvisToolStripMenuItem1,
             this.byDefinitionToolStripMenuItem1,
-            this.bothToolStripMenuItem});
+            this.bothToolStripMenuItem,
+            this.jarvisVsParallelJarvisToolStripMenuItem});
             this.plotToolStripMenuItem.Name = "plotToolStripMenuItem";
-            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 44);
+            this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 38);
             this.plotToolStripMenuItem.Text = "Plot";
             // 
             // jarvisToolStripMenuItem1
             // 
             this.jarvisToolStripMenuItem1.Name = "jarvisToolStripMenuItem1";
-            this.jarvisToolStripMenuItem1.Size = new System.Drawing.Size(285, 44);
+            this.jarvisToolStripMenuItem1.Size = new System.Drawing.Size(381, 44);
             this.jarvisToolStripMenuItem1.Text = "Jarvis";
             this.jarvisToolStripMenuItem1.Click += new System.EventHandler(this.jarvisToolStripMenuItem1_Click);
             // 
             // byDefinitionToolStripMenuItem1
             // 
             this.byDefinitionToolStripMenuItem1.Name = "byDefinitionToolStripMenuItem1";
-            this.byDefinitionToolStripMenuItem1.Size = new System.Drawing.Size(285, 44);
+            this.byDefinitionToolStripMenuItem1.Size = new System.Drawing.Size(381, 44);
             this.byDefinitionToolStripMenuItem1.Text = "By definition";
             this.byDefinitionToolStripMenuItem1.Click += new System.EventHandler(this.byDefinitionToolStripMenuItem1_Click);
             // 
             // bothToolStripMenuItem
             // 
             this.bothToolStripMenuItem.Name = "bothToolStripMenuItem";
-            this.bothToolStripMenuItem.Size = new System.Drawing.Size(285, 44);
+            this.bothToolStripMenuItem.Size = new System.Drawing.Size(381, 44);
             this.bothToolStripMenuItem.Text = "Both";
             this.bothToolStripMenuItem.Click += new System.EventHandler(this.bothToolStripMenuItem_Click);
             // 
@@ -185,31 +189,39 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveToolStripMenuItem,
             this.openToolStripMenuItem,
-            this.saveAsToolStripMenuItem});
+            this.saveAsToolStripMenuItem,
+            this.newToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 36);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(72, 38);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(300, 44);
             this.saveToolStripMenuItem.Text = "Save (Ctrl+S)";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(359, 44);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(300, 44);
             this.openToolStripMenuItem.Text = "Open (Ctrl+O)";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(231, 44);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(300, 44);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(300, 44);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // playStopButton
             // 
@@ -247,6 +259,13 @@
             this.skipBackwardButton.TabIndex = 3;
             this.skipBackwardButton.UseVisualStyleBackColor = true;
             this.skipBackwardButton.Click += new System.EventHandler(this.skipBackwardButton_Click);
+            // 
+            // jarvisVsParallelJarvisToolStripMenuItem
+            // 
+            this.jarvisVsParallelJarvisToolStripMenuItem.Name = "jarvisVsParallelJarvisToolStripMenuItem";
+            this.jarvisVsParallelJarvisToolStripMenuItem.Size = new System.Drawing.Size(381, 44);
+            this.jarvisVsParallelJarvisToolStripMenuItem.Text = "Jarvis vs Parallel Jarvis";
+            this.jarvisVsParallelJarvisToolStripMenuItem.Click += new System.EventHandler(this.jarvisVsParallelJarvisToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -299,6 +318,8 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem jarvisVsParallelJarvisToolStripMenuItem;
     }
 }
 

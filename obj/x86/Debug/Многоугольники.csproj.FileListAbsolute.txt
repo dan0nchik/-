@@ -1,0 +1,16 @@
+C:\Users\stupi\Desktop\Polygons\bin\x86\Debug\Многоугольники.exe.config
+C:\Users\stupi\Desktop\Polygons\bin\x86\Debug\Многоугольники.exe
+C:\Users\stupi\Desktop\Polygons\bin\x86\Debug\Многоугольники.pdb
+C:\Users\stupi\Desktop\Polygons\bin\x86\Debug\ScottPlot.dll
+C:\Users\stupi\Desktop\Polygons\bin\x86\Debug\ScottPlot.WinForms.dll
+C:\Users\stupi\Desktop\Polygons\bin\x86\Debug\System.Drawing.Common.dll
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.csprojAssemblyReference.cache
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.Form1.resources
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.PlotForm.resources
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.Properties.Resources.resources
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.RadiusEventArgs.resources
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.csproj.GenerateResource.cache
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.csproj.CoreCompileInputs.cache
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.csproj.CopyComplete
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.exe
+C:\Users\stupi\Desktop\Polygons\obj\x86\Debug\Многоугольники.pdb
