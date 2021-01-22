@@ -44,6 +44,7 @@
             this.jarvisToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.byDefinitionToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.bothToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.jarvisVsParallelJarvisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +55,7 @@
             this.skipForwardButton = new System.Windows.Forms.Button();
             this.skipBackwardButton = new System.Windows.Forms.Button();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.jarvisVsParallelJarvisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.parallelJarvisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -158,7 +159,8 @@
             this.jarvisToolStripMenuItem1,
             this.byDefinitionToolStripMenuItem1,
             this.bothToolStripMenuItem,
-            this.jarvisVsParallelJarvisToolStripMenuItem});
+            this.jarvisVsParallelJarvisToolStripMenuItem,
+            this.parallelJarvisToolStripMenuItem});
             this.plotToolStripMenuItem.Name = "plotToolStripMenuItem";
             this.plotToolStripMenuItem.Size = new System.Drawing.Size(76, 38);
             this.plotToolStripMenuItem.Text = "Plot";
@@ -183,6 +185,13 @@
             this.bothToolStripMenuItem.Size = new System.Drawing.Size(381, 44);
             this.bothToolStripMenuItem.Text = "Both";
             this.bothToolStripMenuItem.Click += new System.EventHandler(this.bothToolStripMenuItem_Click);
+            // 
+            // jarvisVsParallelJarvisToolStripMenuItem
+            // 
+            this.jarvisVsParallelJarvisToolStripMenuItem.Name = "jarvisVsParallelJarvisToolStripMenuItem";
+            this.jarvisVsParallelJarvisToolStripMenuItem.Size = new System.Drawing.Size(381, 44);
+            this.jarvisVsParallelJarvisToolStripMenuItem.Text = "Jarvis vs Parallel Jarvis";
+            this.jarvisVsParallelJarvisToolStripMenuItem.Click += new System.EventHandler(this.jarvisVsParallelJarvisToolStripMenuItem_Click);
             // 
             // fileToolStripMenuItem
             // 
@@ -260,12 +269,12 @@
             this.skipBackwardButton.UseVisualStyleBackColor = true;
             this.skipBackwardButton.Click += new System.EventHandler(this.skipBackwardButton_Click);
             // 
-            // jarvisVsParallelJarvisToolStripMenuItem
+            // parallelJarvisToolStripMenuItem
             // 
-            this.jarvisVsParallelJarvisToolStripMenuItem.Name = "jarvisVsParallelJarvisToolStripMenuItem";
-            this.jarvisVsParallelJarvisToolStripMenuItem.Size = new System.Drawing.Size(381, 44);
-            this.jarvisVsParallelJarvisToolStripMenuItem.Text = "Jarvis vs Parallel Jarvis";
-            this.jarvisVsParallelJarvisToolStripMenuItem.Click += new System.EventHandler(this.jarvisVsParallelJarvisToolStripMenuItem_Click);
+            this.parallelJarvisToolStripMenuItem.Name = "parallelJarvisToolStripMenuItem";
+            this.parallelJarvisToolStripMenuItem.Size = new System.Drawing.Size(381, 44);
+            this.parallelJarvisToolStripMenuItem.Text = "Parallel Jarvis";
+            this.parallelJarvisToolStripMenuItem.Click += new System.EventHandler(this.parallelJarvisToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -320,6 +329,7 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem jarvisVsParallelJarvisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem parallelJarvisToolStripMenuItem;
     }
 }
 

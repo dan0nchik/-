@@ -223,7 +223,7 @@ namespace Многоугольники
             async void Core()
             {
 
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
                     for (int i = 0; i < shapes.Count; ++i)
                     {
@@ -238,10 +238,10 @@ namespace Многоугольники
                     {
                         if (i != indexA)
                         {
-                            if (Cos(shapes[i], shapes[indexA], M) < minCos)
+                            if (await AsyncCos(shapes[i], shapes[indexA], M) < minCos)
                             {
                                 indexP = i;
-                                minCos = Cos(shapes[i], shapes[indexA], M);
+                                minCos = await AsyncCos(shapes[i], shapes[indexA], M);
                             }
                         }
                     }
@@ -255,9 +255,9 @@ namespace Многоугольники
                         {
                             if (j != indexA)
                             {
-                                if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
+                                if (await AsyncCos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
                                 {
-                                    minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
+                                    minCos = await AsyncCos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
                                     nextIndex = j;
                                 }
                             }
@@ -274,7 +274,7 @@ namespace Многоугольники
 
             async void Core1()
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
                     for (int i = 0; i < shapes.Count; ++i)
                     {
@@ -290,10 +290,10 @@ namespace Многоугольники
                     {
                         if (i != indexA1)
                         {
-                            if (Cos(shapes[i], shapes[indexA1], M1) < minCos)
+                            if (await AsyncCos(shapes[i], shapes[indexA1], M1) < minCos)
                             {
                                 indexP1 = i;
-                                minCos = Cos(shapes[i], shapes[indexA1], M1);
+                                minCos = await AsyncCos(shapes[i], shapes[indexA1], M1);
                             }
                         }
                     }
@@ -306,9 +306,9 @@ namespace Многоугольники
                         {
                             if (j != indexA1)
                             {
-                                if (Cos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y)) < minCos)
+                                if (await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y)) < minCos)
                                 {
-                                    minCos = Cos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y));
+                                    minCos = await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y));
                                     nextIndex1 = j;
                                 }
                             }
@@ -344,6 +344,18 @@ namespace Многоугольники
             Point v1 = new Point(two.X - one.X, two.Y - one.Y);
             Point v2 = new Point(two.X - three.X, two.Y - three.Y);
             return ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
+        }
+
+        private async Task<double> AsyncCos(Shape one, Shape two, Point three)
+        {
+                await Task.Run(() =>
+                {
+                    Point v1 = new Point(two.X - one.X, two.Y - one.Y);
+                    Point v2 = new Point(two.X - three.X, two.Y - three.Y);
+                    return ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
+                });
+            return 0;
+            
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
@@ -444,7 +456,7 @@ namespace Многоугольники
             var watch1 = System.Diagnostics.Stopwatch.StartNew();
             Random rand = new Random();
             PlotForm frm;
-            for (int i = 10; i < 10000; i += 100)
+            for (int i = 10; i < 1000000; i += 1000)
             {
                 for (int j = 0; j < i; ++j)
                 {
@@ -460,6 +472,12 @@ namespace Многоугольники
                 {
                     watch.Start();
                     ByDefinitionAlgorithm(shapesToPlot);
+                    watch.Stop();
+                }
+                if(algoName=="Parallel Jarvis")
+                {
+                    watch.Start();
+                    ParallelJarvis(shapesToPlot);
                     watch.Stop();
                 }
                 if (algoName == "Both")
@@ -486,6 +504,7 @@ namespace Многоугольники
                 {
                     seconds1.Add(Convert.ToInt32(watch1.Elapsed.TotalSeconds));
                 }
+                Console.WriteLine(String.Format("{0}, {1}", i, watch.Elapsed.TotalSeconds));
                 seconds.Add(Convert.ToInt32(watch.Elapsed.TotalSeconds));
                 pointsRange.Add(i);
             }
@@ -495,6 +514,7 @@ namespace Многоугольники
             }
             else
             {
+                
                 frm = new PlotForm(algoName, seconds.ToArray(), pointsRange.ToArray());
             }
             frm.Show();
@@ -852,6 +872,11 @@ namespace Многоугольники
         private void jarvisVsParallelJarvisToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GenerateShapes("Jarvis vs Parallel Jarvis");
+        }
+
+        private void parallelJarvisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GenerateShapes("Parallel Jarvis");
         }
 
         private void ShakeHull()

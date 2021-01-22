@@ -30,16 +30,8 @@ namespace Многоугольники
 
         private void formsPlot1_Load(object sender, EventArgs e)
         {
-            if (algo == "Jarvis")
-            {
-                formsPlot1.plt.PlotScatter(points, time);
-                formsPlot1.plt.Title(algo);
-                formsPlot1.plt.XLabel("Shapes");
-                formsPlot1.plt.YLabel("Seconds");
-                formsPlot1.Render();
-
-            }
-            if (algo == "By definition")
+            
+            if (algo == "Jarvis" || algo=="By definition" || algo == "Parallel Jarvis")
             {
                 formsPlot1.plt.PlotScatter(points, time);
                 formsPlot1.plt.Title(algo);
@@ -60,6 +52,8 @@ namespace Многоугольники
             }
             if (algo == "Jarvis vs Parallel Jarvis")
             {
+           
+
                 formsPlot1.plt.PlotScatter(points, time, label: "Jarvis");
                 formsPlot1.plt.PlotScatter(points, time4second, label: "Parallel Jarvis");
                 formsPlot1.plt.Title(algo);
