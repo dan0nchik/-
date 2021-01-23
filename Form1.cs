@@ -453,7 +453,7 @@ namespace Многоугольники
             var watch1 = System.Diagnostics.Stopwatch.StartNew();
             Random rand = new Random();
             PlotForm frm;
-            for (int i = 10; i < 1000; i += 100)
+            for (int i = 10; i < 300000; i += 500)
             {
                 for (int j = 0; j < i; ++j)
                 {
