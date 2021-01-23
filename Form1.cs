@@ -212,9 +212,9 @@ namespace Многоугольники
 
         private void ParallelJarvis(List<Shape> shapes)
         {
-
             int indexA = 0, indexA1 = 0, indexP = 0, nextIndex = 0, indexP1 = 0, nextIndex1 = 0;
             double minCos = double.MaxValue;
+            double minCos1 = double.MaxValue;
             Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
             Point M1 = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
 
@@ -284,16 +284,14 @@ namespace Многоугольники
                         }
                     }
 
-
-                    minCos = double.MaxValue;
                     for (int i = 0; i < shapes.Count; i++)
                     {
                         if (i != indexA1)
                         {
-                            if (await AsyncCos(shapes[i], shapes[indexA1], M1) < minCos)
+                            if (await AsyncCos(shapes[i], shapes[indexA1], M1) < minCos1)
                             {
                                 indexP1 = i;
-                                minCos = await AsyncCos(shapes[i], shapes[indexA1], M1);
+                                minCos1 = await AsyncCos(shapes[i], shapes[indexA1], M1);
                             }
                         }
                     }
@@ -301,14 +299,14 @@ namespace Многоугольники
                     shapes[indexA1].inShell = true;
                     do
                     {
-                        minCos = double.MaxValue;
+                        minCos1 = double.MaxValue;
                         for (int j = 0; j < shapes.Count; j++)
                         {
                             if (j != indexA1)
                             {
-                                if (await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y)) < minCos)
+                                if (await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y)) < minCos1)
                                 {
-                                    minCos = await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y));
+                                    minCos1 = await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y));
                                     nextIndex1 = j;
                                 }
                             }
@@ -348,16 +346,15 @@ namespace Многоугольники
 
         private async Task<double> AsyncCos(Shape one, Shape two, Point three)
         {
-                await Task.Run(() =>
-                {
-                    Point v1 = new Point(two.X - one.X, two.Y - one.Y);
-                    Point v2 = new Point(two.X - three.X, two.Y - three.Y);
-                    return ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
-                });
-            return 0;
-            
+            double angle = 0;
+            await Task.Run(() =>
+            {
+                Point v1 = new Point(two.X - one.X, two.Y - one.Y);
+                Point v2 = new Point(two.X - three.X, two.Y - three.Y);
+                angle = ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
+            });
+            return angle;
         }
-
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
             bool shifted = false;
@@ -456,7 +453,7 @@ namespace Многоугольники
             var watch1 = System.Diagnostics.Stopwatch.StartNew();
             Random rand = new Random();
             PlotForm frm;
-            for (int i = 10; i < 1000000; i += 1000)
+            for (int i = 10; i < 1000; i += 100)
             {
                 for (int j = 0; j < i; ++j)
                 {
@@ -502,10 +499,10 @@ namespace Многоугольники
                 }
                 if (algoName == "Both" || algoName == "Jarvis vs Parallel Jarvis")
                 {
-                    seconds1.Add(Convert.ToInt32(watch1.Elapsed.TotalSeconds));
+                    seconds1.Add(Convert.ToDouble(watch1.Elapsed.TotalSeconds));
                 }
-                Console.WriteLine(String.Format("{0}, {1}", i, watch.Elapsed.TotalSeconds));
-                seconds.Add(Convert.ToInt32(watch.Elapsed.TotalSeconds));
+                Console.WriteLine(string.Format("{0}, {1}", i, watch.Elapsed.TotalSeconds));
+                seconds.Add(Convert.ToDouble(watch.Elapsed.TotalSeconds));
                 pointsRange.Add(i);
             }
             if (algoName == "Both" || algoName == "Jarvis vs Parallel Jarvis")
