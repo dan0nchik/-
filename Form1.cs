@@ -15,7 +15,7 @@ namespace Многоугольники
         List<Shape> shapes;
         private int shapeFlag, algoFlag;
         private Color lineColor, pointColor;
-        private bool saved, showPlayIcon;
+        private bool saved = true, showPlayIcon;
         System.Windows.Forms.Timer timer;
         Random random;
         FileStream fileStream;
@@ -25,7 +25,6 @@ namespace Многоугольники
         public Form1()
         {
             shapes = new List<Shape>();
-            shapes.Add(new Circle(50, 50));
             InitializeComponent();
             DoubleBuffered = true;
             timer = new System.Windows.Forms.Timer();
@@ -45,21 +44,10 @@ namespace Многоугольники
             if (!saved)
             {
                 MessageBox.Show("You have unsaved changes. Do you want to save them?", "Polygons", MessageBoxButtons.YesNo);
-                if (DialogResult == DialogResult.No)
+                if (DialogResult == DialogResult.Yes)
                 {
-                    Console.WriteLine("NO");
-                    
-                    Close();
-                }
-                else
-                {
-                    Console.WriteLine("YES");
                     Save(saveFilePath);
                 }
-            }
-            else
-            {
-                Close();
             }
         }
 
@@ -87,10 +75,10 @@ namespace Многоугольники
                     shape.inShell = false;
                 if (algoFlag == 0)
                 {
-                    ParallelJarvis(shapes);
+                    JarvisAlgorithm(e, lineColor);
                 }
                 else
-                    JarvisAlgorithm(e, lineColor);
+                    ByDefinitionAlgorithm(e, lineColor);
             }
             foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
             if (shapes.Count != 0)
@@ -387,7 +375,13 @@ namespace Многоугольники
                     {
                         Console.WriteLine("IN");
                         shapes.RemoveAt(shapes.Count - 1);
-
+                        foreach(Shape i in shapes.ToList())
+                        {
+                            i.dragged = true;
+                            shifted = true;
+                            i.ChosenX = i.X - e.X;
+                            i.ChosenY = i.Y - e.Y;
+                        }
                     }
                 Refresh();
             }
@@ -407,15 +401,18 @@ namespace Многоугольники
 
         private void Form1_MouseMove(object sender, MouseEventArgs e)
         {
+            bool refreshed = false;
             foreach (Shape i in shapes.ToList())
             {
                 if (i.dragged == true)
                 {
                     i.X = e.X + i.ChosenX;
                     i.Y = e.Y + i.ChosenY;
-                    Refresh();
+                    refreshed = true;
                 }
             }
+            if (refreshed)
+                Refresh();
 
         }
 
