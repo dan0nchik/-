@@ -15,12 +15,12 @@ namespace Многоугольники
         List<Shape> shapes;
         private int shapeFlag, algoFlag;
         private Color lineColor, pointColor;
-        private bool saved = true, showPlayIcon;
+        private bool changed = false, showPlayIcon;
         System.Windows.Forms.Timer timer;
         Random random;
         FileStream fileStream;
         BinaryFormatter formatter;
-        private string saveFilePath;
+        private string savedFile;
 
         public Form1()
         {
@@ -33,7 +33,7 @@ namespace Многоугольники
             pointColor = Color.Black;
             timer.Tick += timer_Tick;
             showPlayIcon = false;
-            saveFilePath = "";
+            savedFile = "";
             formatter = new BinaryFormatter();
             KeyDown += Form1_KeyDown;
             FormClosing += Form1_Closing;
@@ -41,12 +41,19 @@ namespace Многоугольники
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!saved)
+            if (changed)
             {
-                MessageBox.Show("You have unsaved changes. Do you want to save them?", "Polygons", MessageBoxButtons.YesNo);
-                if (DialogResult == DialogResult.Yes)
+                DialogResult result = MessageBox.Show(
+                                                    "Attention",
+                                                    "You have unsaved changes. Save them?",
+                                                    MessageBoxButtons.YesNoCancel);
+                if(result == DialogResult.Yes)
                 {
-                    Save(saveFilePath);
+                    Save();
+                }
+                if(result == DialogResult.Cancel)
+                {
+                    //cancel
                 }
             }
         }
@@ -81,8 +88,7 @@ namespace Многоугольники
                     ByDefinitionAlgorithm(e, lineColor);
             }
             foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
-            if (shapes.Count != 0)
-                saved = false;
+
         }
 
         private void ByDefinitionAlgorithm(PaintEventArgs e, Color lineColor)
@@ -309,13 +315,13 @@ namespace Многоугольники
                 });
             }
 
-            
+
             //Thread thr1 = new Thread(Core);
             //Thread thr2 = new Thread(Core1);
             //thr1.Start();
             //thr2.Start();
 
-            
+
             //Task task1 = Task.Factory.StartNew(() => Core());
             //Task task2  = Task.Factory.StartNew(() => Core1());
             //Task.WaitAll(task1, task2);
@@ -369,13 +375,14 @@ namespace Многоугольники
                     case 2:
                         shapes.Add(new Triangle(e.X, e.Y));
                         break;
+
                 }
+                changed = true;
                 if (shapes.Count > 3)
                     if (!CheckIfInHull(shapes))
                     {
-                        Console.WriteLine("IN");
                         shapes.RemoveAt(shapes.Count - 1);
-                        foreach(Shape i in shapes.ToList())
+                        foreach (Shape i in shapes.ToList())
                         {
                             i.dragged = true;
                             shifted = true;
@@ -392,6 +399,7 @@ namespace Многоугольники
                     if (i.IsInside(e.X, e.Y) == true)
                     {
                         shapes.RemoveAt(shapes.IndexOf(i));
+                        changed = true;
                         Refresh();
                     }
                 }
@@ -409,6 +417,7 @@ namespace Многоугольники
                     i.X = e.X + i.ChosenX;
                     i.Y = e.Y + i.ChosenY;
                     refreshed = true;
+                    changed = true;
                 }
             }
             if (refreshed)
@@ -468,7 +477,7 @@ namespace Многоугольники
                     ByDefinitionAlgorithm(shapesToPlot);
                     watch.Stop();
                 }
-                if(algoName=="Parallel Jarvis")
+                if (algoName == "Parallel Jarvis")
                 {
                     watch.Start();
                     ParallelJarvis(shapesToPlot);
@@ -484,7 +493,7 @@ namespace Многоугольники
                     ByDefinitionAlgorithm(shapesToPlot);
                     watch1.Stop();
                 }
-                if(algoName == "Jarvis vs Parallel Jarvis")
+                if (algoName == "Jarvis vs Parallel Jarvis")
                 {
                     watch.Start();
                     JarvisAlgorithm(shapesToPlot);
@@ -508,7 +517,7 @@ namespace Многоугольники
             }
             else
             {
-                
+
                 frm = new PlotForm(algoName, seconds.ToArray(), pointsRange.ToArray());
             }
             frm.Show();
@@ -695,6 +704,7 @@ namespace Многоугольники
         public void OnRadiusChanged(object sender, RadiusEventArgs e)
         {
             Shape.Radius = e.Radius;
+            changed = true;
             Refresh();
         }
         private RadiusForm radfrm = new RadiusForm();
@@ -759,26 +769,39 @@ namespace Многоугольники
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (saveFilePath != "")
-                Save(saveFilePath);
-            else
-                SaveAs();
+
         }
-        private void Save(string path)
+        private void Save()
         {
-            if (path != "")
+                if (savedFile != "")
+                {
+                    fileStream = new FileStream(savedFile, FileMode.OpenOrCreate);
+                    List<object> settings = new List<object>{
+                        shapes,
+                        Shape.Radius,
+                        pointColor,
+                        lineColor
+                    };
+                    formatter.Serialize(fileStream, settings);
+                    fileStream.Close();
+                    changed = true;
+                }
+            }
+
+        private void SaveAs()
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
             {
-                fileStream = new FileStream(path, FileMode.OpenOrCreate);
-                List<object> settings = new List<object>{
-                    shapes,
-                    Shape.Radius,
-                    pointColor,
-                    lineColor
-                };
-                formatter.Serialize(fileStream, settings);
-                fileStream.Close();
-                saveFilePath = path;
-                saved = true;
+                Filter = "Text file|*.txt",
+                Title = "Save current session",
+                FileName = "session"
+            };
+            saveFileDialog1.ShowDialog();
+            if (saveFileDialog1.FileName != "")
+            {
+                changed = false;
+                savedFile = saveFileDialog1.FileName;
+                Save();
             }
         }
         private void Open()
@@ -800,36 +823,17 @@ namespace Многоугольники
                     pointColor = (Color)settings[2];
                     lineColor = (Color)settings[3];
 
-                    saveFilePath = openFileDialog.FileName;
+                    savedFile = openFileDialog.FileName;
                     Refresh();
                     fileStream.Close();
                 }
-            }
-        }
-        private void SaveAs()
-        {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog
-            {
-                Filter = "Text file|*.txt",
-                Title = "Save current session",
-                FileName = "session"
-            };
-            saveFileDialog1.ShowDialog();
-            if (saveFileDialog1.FileName != "")
-            {
-                Save(saveFileDialog1.FileName);
-                saved = true;
-                saveFilePath = saveFileDialog1.FileName;
             }
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
             {
-                if (saveFilePath != "")
-                    Save(saveFilePath);
-                else
-                    SaveAs();
+                
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
             {
@@ -839,7 +843,7 @@ namespace Многоугольники
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (saved)
+            if (changed)
             {
                 shapes.Clear();
                 Refresh();
@@ -886,12 +890,12 @@ namespace Многоугольники
 
         private void lineColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MyDialog.ShowDialog() == DialogResult.OK) { lineColor = MyDialog.Color; Refresh(); }
+            if (MyDialog.ShowDialog() == DialogResult.OK) { lineColor = MyDialog.Color; changed = true; Refresh(); }
         }
 
         private void pontColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MyDialog.ShowDialog() == DialogResult.OK) { pointColor = MyDialog.Color; Refresh(); }
+            if (MyDialog.ShowDialog() == DialogResult.OK) { pointColor = MyDialog.Color; changed = true; Refresh(); }
         }
 
     }

@@ -7,14 +7,14 @@
     <framework targetVersion="4.7.2" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="Многоугольники.exe.manifest" size="5631">
+    <dependentAssembly dependencyType="install" codebase="Многоугольники.exe.manifest" size="5831">
       <assemblyIdentity name="Многоугольники.exe" version="1.0.0.3" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>rYuh7NTAy0hc8ui6GtXkUn3anOF63XCqRlPj8cn/FsA=</dsig:DigestValue>
+        <dsig:DigestValue>zDzsmk2mBky3Ax6tFMGGSAVGzu6w2qTf0C17v8vmIK0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
