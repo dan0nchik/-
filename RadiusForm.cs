@@ -23,17 +23,22 @@ namespace Многоугольники
     public delegate void RadiusChanged(object sender, RadiusEventArgs e);
     public partial class RadiusForm : Form
     {
-
+        private int radiusFromFile = -1;
         public event RadiusChanged RC;
 
-        public RadiusForm()
+        public RadiusForm(int radiusFromFile)
         {
+            this.radiusFromFile = radiusFromFile;
             InitializeComponent();
         }
 
         private void RadiusForm_Load(object sender, EventArgs e)
         {
-
+            Console.WriteLine(radiusFromFile);
+            Console.WriteLine(trackBar1.Value);
+            if(radiusFromFile != -1)
+            //TODO
+            trackBar1.Value += radiusFromFile;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)

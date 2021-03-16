@@ -15,7 +15,7 @@ namespace Многоугольники
         List<Shape> shapes;
         private int shapeFlag, algoFlag;
         private Color lineColor, pointColor;
-        private bool changed = false, showPlayIcon;
+        private bool changed, showPlayIcon, radiusAfterOpen;
         System.Windows.Forms.Timer timer;
         Random random;
         FileStream fileStream;
@@ -34,26 +34,33 @@ namespace Многоугольники
             timer.Tick += timer_Tick;
             showPlayIcon = false;
             savedFile = "";
+            changed = false;
+            radiusAfterOpen = false;
             formatter = new BinaryFormatter();
             KeyDown += Form1_KeyDown;
             FormClosing += Form1_Closing;
+        }
+
+        private DialogResult showMsgBox()
+        {
+            return MessageBox.Show("Attention",
+                                                    "You have unsaved changes. Save them?",
+                                                    MessageBoxButtons.YesNoCancel);
         }
 
         private void Form1_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (changed)
             {
-                DialogResult result = MessageBox.Show(
-                                                    "Attention",
-                                                    "You have unsaved changes. Save them?",
-                                                    MessageBoxButtons.YesNoCancel);
+                DialogResult result = showMsgBox();
                 if(result == DialogResult.Yes)
                 {
                     Save();
+                    Console.WriteLine("YES");
                 }
                 if(result == DialogResult.Cancel)
                 {
-                    //cancel
+                    e.Cancel = true;
                 }
             }
         }
@@ -703,24 +710,34 @@ namespace Многоугольники
 
         public void OnRadiusChanged(object sender, RadiusEventArgs e)
         {
-            Shape.Radius = e.Radius;
-            changed = true;
+            Console.WriteLine(Shape.Radius);
+            if (radiusAfterOpen)
+            {
+                e.Radius = Shape.Radius;
+                radiusAfterOpen = false;
+            }
+            else
+            {
+                Shape.Radius = e.Radius;
+                changed = true;
+            }
             Refresh();
         }
-        private RadiusForm radfrm = new RadiusForm();
+        private RadiusForm radfrm = new RadiusForm(radiusFromFile: Shape.Radius);
         private void radiusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (radfrm.IsAccessible == false)
                 radfrm.Activate();
             if (radfrm.IsDisposed)
-                radfrm = new RadiusForm();
+                radfrm = new RadiusForm(radiusFromFile: Shape.Radius);
             if (radfrm.WindowState == FormWindowState.Maximized)
                 radfrm.WindowState = FormWindowState.Normal;
             if (radfrm.WindowState == FormWindowState.Minimized)
                 radfrm.WindowState = FormWindowState.Normal;
-
-            radfrm.Show();
+            
             radfrm.RC += OnRadiusChanged;
+            radfrm.Show();
+
         }
 
         private void playStopButton_Click(object sender, EventArgs e)
@@ -773,6 +790,8 @@ namespace Многоугольники
         }
         private void Save()
         {
+            Console.WriteLine("Changed:", changed);
+            Console.WriteLine("File", savedFile);
                 if (savedFile != "")
                 {
                     fileStream = new FileStream(savedFile, FileMode.OpenOrCreate);
@@ -784,8 +803,12 @@ namespace Многоугольники
                     };
                     formatter.Serialize(fileStream, settings);
                     fileStream.Close();
-                    changed = true;
+                    changed = false;
                 }
+            else
+            {
+                SaveAs();
+            }
             }
 
         private void SaveAs()
@@ -799,33 +822,52 @@ namespace Многоугольники
             saveFileDialog1.ShowDialog();
             if (saveFileDialog1.FileName != "")
             {
-                changed = false;
                 savedFile = saveFileDialog1.FileName;
                 Save();
             }
         }
         private void Open()
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            
+            if (changed)
             {
-                openFileDialog.InitialDirectory = "c:\\";
-                openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
-                openFileDialog.FilterIndex = 2;
-                openFileDialog.RestoreDirectory = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                DialogResult result = showMsgBox();
+                if(result == DialogResult.Yes)
                 {
-                    fileStream = (FileStream)openFileDialog.OpenFile();
-                    List<object> settings = (List<object>)formatter.Deserialize(fileStream);
+                    Save();
+                    Open();
+                }
+                if (result == DialogResult.No)
+                {
+                    changed = false;
+                    Open();
+                }
+            }
+            else
+            {
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.InitialDirectory = "c:\\";
+                    openFileDialog.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*";
+                    openFileDialog.FilterIndex = 2;
+                    openFileDialog.RestoreDirectory = true;
 
-                    shapes = (List<Shape>)settings[0];
-                    Shape.Radius = (int)settings[1];
-                    pointColor = (Color)settings[2];
-                    lineColor = (Color)settings[3];
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        fileStream = (FileStream)openFileDialog.OpenFile();
+                        List<object> settings = (List<object>)formatter.Deserialize(fileStream);
 
-                    savedFile = openFileDialog.FileName;
-                    Refresh();
-                    fileStream.Close();
+                        shapes = (List<Shape>)settings[0];
+                        Shape.Radius = (int)settings[1];
+
+                        pointColor = (Color)settings[2];
+                        lineColor = (Color)settings[3];
+
+                        savedFile = openFileDialog.FileName;
+                        radiusAfterOpen = true;
+                        Refresh();
+                        fileStream.Close();
+                    }
                 }
             }
         }
@@ -833,7 +875,7 @@ namespace Многоугольники
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
             {
-                
+                Save();
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
             {
@@ -843,25 +885,27 @@ namespace Многоугольники
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (changed)
+            if (!changed)
             {
                 shapes.Clear();
+                changed = false;
                 Refresh();
             }
             else
             {
-                MessageBox.Show("You have unsaved changes. Do you want to save them?", "Polygons", MessageBoxButtons.YesNo);
-                if (DialogResult == DialogResult.Yes)
+                DialogResult result = showMsgBox(); 
+                if (result == DialogResult.Yes)
                 {
-                    SaveAs();
+                    Save();
                     shapes.Clear();
-                    Refresh();
+                    
                 }
-                else
+                if(result == DialogResult.No)
                 {
                     shapes.Clear();
-                    Refresh();
+                    changed = false;
                 }
+                Refresh();
             }
 
 
