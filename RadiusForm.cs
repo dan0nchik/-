@@ -34,12 +34,11 @@ namespace Многоугольники
 
         private void RadiusForm_Load(object sender, EventArgs e)
         {
-            trackBar1.Value = 0;
-            //Console.WriteLine("rad from file" + radiusFromFile);
 
-            trackBar1.Value = radiusFromFile/2;
+            trackBar1.Value = 0;
+
+            trackBar1.Value = radiusFromFile - 10;
         
-            //Console.WriteLine("track" + trackBar1.Value);
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)

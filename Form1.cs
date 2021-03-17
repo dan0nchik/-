@@ -21,6 +21,7 @@ namespace Многоугольники
         FileStream fileStream;
         BinaryFormatter formatter;
         private string savedFile;
+        Algorithm algorithm;
 
         public Form1()
         {
@@ -35,6 +36,7 @@ namespace Многоугольники
             showPlayIcon = false;
             savedFile = "";
             changed = false;
+            algorithm = new Algorithm();
             radiusAfterOpen = false;
             formatter = new BinaryFormatter();
             KeyDown += Form1_KeyDown;
@@ -89,272 +91,13 @@ namespace Многоугольники
                     shape.inShell = false;
                 if (algoFlag == 0)
                 {
-                    JarvisAlgorithm(e, lineColor);
+                    algorithm.JarvisAlgorithm(e, lineColor, shapes);
                 }
                 else
-                    ByDefinitionAlgorithm(e, lineColor);
+                    algorithm.ByDefinitionAlgorithm(e, lineColor, shapes);
             }
             foreach (Shape i in shapes.ToList()) i.Draw(e.Graphics, pointColor);
 
-        }
-
-        private void ByDefinitionAlgorithm(PaintEventArgs e, Color lineColor)
-        {
-            double k, b;
-            int topCount, bottomCount, rightCount, leftCount;
-
-            foreach (Shape first in shapes)
-            {
-                foreach (Shape second in shapes)
-                {
-
-                    if (second != first)
-                    {
-                        if ((second.X - first.X) == 0)
-                        {
-                            rightCount = 0;
-                            leftCount = 0;
-                            foreach (Shape third in shapes)
-                            {
-                                if (third != first && third != second)
-                                {
-                                    if (first.X >= third.X) rightCount++;
-                                    else leftCount++;
-                                }
-                            }
-                            if (rightCount == 0 || leftCount == 0)
-                            {
-                                second.inShell = true;
-                                first.inShell = true;
-                                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
-                            }
-                        }
-                        else
-                        {
-                            k = ((double)first.Y - (double)second.Y) / ((double)first.X - (double)second.X);
-                            b = first.Y - (k * first.X);
-                            topCount = 0;
-                            bottomCount = 0;
-                            foreach (Shape third in shapes)
-                            {
-                                if (third != first && third != second)
-                                {
-                                    if (third.Y >= k * third.X + b) topCount++;
-                                    else bottomCount++;
-                                }
-                            }
-                            if (bottomCount == 0 || topCount == 0)
-                            {
-                                second.inShell = true;
-                                first.inShell = true;
-                                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(first.X, first.Y), new Point(second.X, second.Y));
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        }
-
-        private void JarvisAlgorithm(PaintEventArgs e, Color lineColor)
-        {
-
-            int indexA = 0, indexP = 0, nextIndex = 0;
-            for (int i = 0; i < shapes.Count; ++i)
-            {
-                if (shapes[indexA].Y < shapes[i].Y)
-                {
-                    indexA = i;
-                }
-            }
-            double minCos = double.MaxValue;
-            Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-
-            for (int i = 0; i < shapes.Count; i++)
-            {
-                if (i != indexA)
-                {
-                    if (Cos(shapes[i], shapes[indexA], M) < minCos)
-                    {
-                        indexP = i;
-                        minCos = Cos(shapes[i], shapes[indexA], M);
-                    }
-                }
-            }
-            e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexA].X, shapes[indexA].Y), new Point(shapes[indexP].X, shapes[indexP].Y));
-            shapes[indexA].inShell = true;
-            shapes[indexP].inShell = true;
-            int endPointIndex = indexA;
-            do
-            {
-                minCos = double.MaxValue;
-                for (int j = 0; j < shapes.Count; j++)
-                {
-                    if (j != indexA)
-                    {
-                        if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
-                        {
-                            minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
-                            nextIndex = j;
-                        }
-                    }
-                }
-
-                e.Graphics.DrawLine(new Pen(new SolidBrush(lineColor)), new Point(shapes[indexP].X, shapes[indexP].Y), new Point(shapes[nextIndex].X, shapes[nextIndex].Y));
-                shapes[nextIndex].inShell = true;
-                indexA = indexP;
-                indexP = nextIndex;
-            } while (indexP != endPointIndex);
-
-        }
-
-
-
-        private void ParallelJarvis(List<Shape> shapes)
-        {
-            int indexA = 0, indexA1 = 0, indexP = 0, nextIndex = 0, indexP1 = 0, nextIndex1 = 0;
-            double minCos = double.MaxValue;
-            double minCos1 = double.MaxValue;
-            Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-            Point M1 = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-
-            //схема алгоритма https://i.imgur.com/LiRMF0t.jpg
-
-            async void Core()
-            {
-
-                await Task.Run(async () =>
-                {
-                    for (int i = 0; i < shapes.Count; ++i)
-                    {
-                        if (shapes[indexA].Y < shapes[i].Y)
-                        {
-                            indexA = i;
-                        }
-                    }
-
-
-                    for (int i = 0; i < shapes.Count; i++)
-                    {
-                        if (i != indexA)
-                        {
-                            if (await AsyncCos(shapes[i], shapes[indexA], M) < minCos)
-                            {
-                                indexP = i;
-                                minCos = await AsyncCos(shapes[i], shapes[indexA], M);
-                            }
-                        }
-                    }
-                    shapes[indexA].inShell = true;
-                    shapes[indexP].inShell = true;
-
-                    do
-                    {
-                        minCos = double.MaxValue;
-                        for (int j = 0; j < shapes.Count; j++)
-                        {
-                            if (j != indexA)
-                            {
-                                if (await AsyncCos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
-                                {
-                                    minCos = await AsyncCos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
-                                    nextIndex = j;
-                                }
-                            }
-                        }
-
-                        shapes[nextIndex].inShell = true;
-                        indexA = indexP;
-                        indexP = nextIndex;
-                    } while (indexP != indexA1);
-                });
-
-
-            }
-
-            async void Core1()
-            {
-                await Task.Run(async () =>
-                {
-                    for (int i = 0; i < shapes.Count; ++i)
-                    {
-                        if (shapes[indexA1].Y > shapes[i].Y)
-                        {
-                            indexA1 = i;
-                        }
-                    }
-
-                    for (int i = 0; i < shapes.Count; i++)
-                    {
-                        if (i != indexA1)
-                        {
-                            if (await AsyncCos(shapes[i], shapes[indexA1], M1) < minCos1)
-                            {
-                                indexP1 = i;
-                                minCos1 = await AsyncCos(shapes[i], shapes[indexA1], M1);
-                            }
-                        }
-                    }
-                    shapes[indexP1].inShell = true;
-                    shapes[indexA1].inShell = true;
-                    do
-                    {
-                        minCos1 = double.MaxValue;
-                        for (int j = 0; j < shapes.Count; j++)
-                        {
-                            if (j != indexA1)
-                            {
-                                if (await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y)) < minCos1)
-                                {
-                                    minCos1 = await AsyncCos(shapes[indexA1], shapes[indexP1], new Point(shapes[j].X, shapes[j].Y));
-                                    nextIndex1 = j;
-                                }
-                            }
-                        }
-
-                        shapes[nextIndex1].inShell = true;
-                        indexA1 = indexP1;
-                        indexP1 = nextIndex1;
-                    }
-                    while (indexP1 != indexA);
-
-                });
-            }
-
-
-            //Thread thr1 = new Thread(Core);
-            //Thread thr2 = new Thread(Core1);
-            //thr1.Start();
-            //thr2.Start();
-
-
-            //Task task1 = Task.Factory.StartNew(() => Core());
-            //Task task2  = Task.Factory.StartNew(() => Core1());
-            //Task.WaitAll(task1, task2);
-
-            Core();
-            Core1();
-
-        }
-
-        private double Cos(Shape one, Shape two, Point three)
-        {
-            Point v1 = new Point(two.X - one.X, two.Y - one.Y);
-            Point v2 = new Point(two.X - three.X, two.Y - three.Y);
-            return ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
-        }
-
-        private async Task<double> AsyncCos(Shape one, Shape two, Point three)
-        {
-            double angle = 0;
-            await Task.Run(() =>
-            {
-                Point v1 = new Point(two.X - one.X, two.Y - one.Y);
-                Point v2 = new Point(two.X - three.X, two.Y - three.Y);
-                angle = ((v1.X * v2.X) + (v1.Y * v2.Y)) / (Math.Sqrt(v1.X * v1.X + v1.Y * v1.Y) * Math.Sqrt(v2.X * v2.X + v2.Y * v2.Y));
-            });
-            return angle;
         }
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -386,7 +129,7 @@ namespace Многоугольники
                 }
                 changed = true;
                 if (shapes.Count > 3)
-                    if (!CheckIfInHull(shapes))
+                    if (!algorithm.CheckIfInHull(shapes))
                     {
                         shapes.RemoveAt(shapes.Count - 1);
                         foreach (Shape i in shapes.ToList())
@@ -475,39 +218,39 @@ namespace Многоугольники
                 if (algoName == "Jarvis")
                 {
                     watch.Start();
-                    JarvisAlgorithm(shapesToPlot);
+                    algorithm.JarvisAlgorithm(shapesToPlot);
                     watch.Stop();
                 }
                 if (algoName == "By definition")
                 {
                     watch.Start();
-                    ByDefinitionAlgorithm(shapesToPlot);
+                    algorithm.ByDefinitionAlgorithm(shapesToPlot);
                     watch.Stop();
                 }
                 if (algoName == "Parallel Jarvis")
                 {
                     watch.Start();
-                    ParallelJarvis(shapesToPlot);
+                    algorithm.ParallelJarvis(shapesToPlot);
                     watch.Stop();
                 }
                 if (algoName == "Both")
                 {
                     watch.Start();
-                    JarvisAlgorithm(shapesToPlot);
+                    algorithm.JarvisAlgorithm(shapesToPlot);
                     watch.Stop();
 
                     watch1.Start();
-                    ByDefinitionAlgorithm(shapesToPlot);
+                    algorithm.ByDefinitionAlgorithm(shapesToPlot);
                     watch1.Stop();
                 }
                 if (algoName == "Jarvis vs Parallel Jarvis")
                 {
                     watch.Start();
-                    JarvisAlgorithm(shapesToPlot);
+                    algorithm.JarvisAlgorithm(shapesToPlot);
                     watch.Stop();
 
                     watch1.Start();
-                    ParallelJarvis(shapesToPlot);
+                    algorithm.ParallelJarvis(shapesToPlot);
                     watch1.Stop();
                 }
                 if (algoName == "Both" || algoName == "Jarvis vs Parallel Jarvis")
@@ -533,163 +276,6 @@ namespace Многоугольники
         {
             GenerateShapes("Jarvis");
         }
-        private void JarvisAlgorithm(List<Shape> shapes)
-        {
-
-            {
-                int indexA = 0, indexP = 0, nextIndex = 0;
-                for (int i = 0; i < shapes.Count; ++i)
-                {
-                    if (shapes[indexA].Y < shapes[i].Y)
-                    {
-                        indexA = i;
-                    }
-                }
-                double minCos = double.MaxValue;
-                Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-
-                for (int i = 0; i < shapes.Count; i++)
-                {
-                    if (i != indexA)
-                    {
-                        if (Cos(shapes[i], shapes[indexA], M) < minCos)
-                        {
-                            indexP = i;
-                            minCos = Cos(shapes[i], shapes[indexA], M);
-                        }
-                    }
-                }
-                shapes[indexA].inShell = true;
-                shapes[indexP].inShell = true;
-                int endPointIndex = indexA;
-                do
-                {
-                    minCos = double.MaxValue;
-                    for (int j = 0; j < shapes.Count; j++)
-                    {
-                        if (j != indexA)
-                        {
-                            if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
-                            {
-                                minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
-                                nextIndex = j;
-                            }
-                        }
-                    }
-
-                    shapes[nextIndex].inShell = true;
-                    indexA = indexP;
-                    indexP = nextIndex;
-                } while (indexP != endPointIndex);
-            }
-        }
-        private bool CheckIfInHull(List<Shape> shapes)
-        {
-
-
-            int indexA = 0, indexP = 0, nextIndex = 0;
-            for (int i = 0; i < shapes.Count; ++i)
-            {
-                if (shapes[indexA].Y < shapes[i].Y)
-                {
-                    indexA = i;
-                }
-            }
-            double minCos = double.MaxValue;
-            Point M = new Point(shapes[indexA].X - 1000, shapes[indexA].Y);
-
-            for (int i = 0; i < shapes.Count; i++)
-            {
-                if (i != indexA)
-                {
-                    if (Cos(shapes[i], shapes[indexA], M) < minCos)
-                    {
-                        indexP = i;
-                        minCos = Cos(shapes[i], shapes[indexA], M);
-                    }
-                }
-            }
-            shapes[indexA].inShell = true;
-            shapes[indexP].inShell = true;
-            int endPointIndex = indexA;
-            do
-            {
-                minCos = double.MaxValue;
-                for (int j = 0; j < shapes.Count; j++)
-                {
-                    if (j != indexA)
-                    {
-                        if (Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y)) < minCos)
-                        {
-                            minCos = Cos(shapes[indexA], shapes[indexP], new Point(shapes[j].X, shapes[j].Y));
-                            nextIndex = j;
-                        }
-                    }
-                }
-
-                shapes[nextIndex].inShell = true;
-                indexA = indexP;
-                indexP = nextIndex;
-            } while (indexP != endPointIndex);
-            if (!shapes.Last().inShell) return false;
-            return true;
-        }
-        private void ByDefinitionAlgorithm(List<Shape> shapes)
-        {
-            double k, b;
-            int topCount, bottomCount, rightCount, leftCount;
-
-            foreach (Shape first in shapes)
-            {
-                foreach (Shape second in shapes)
-                {
-
-                    if (second != first)
-                    {
-                        if ((second.X - first.X) == 0)
-                        {
-                            rightCount = 0;
-                            leftCount = 0;
-                            foreach (Shape third in shapes)
-                            {
-                                if (third != first && third != second)
-                                {
-                                    if (first.X >= third.X) rightCount++;
-                                    else leftCount++;
-                                }
-                            }
-                            if (rightCount == 0 || leftCount == 0)
-                            {
-                                second.inShell = true;
-                                first.inShell = true;
-                            }
-                        }
-                        else
-                        {
-                            k = ((double)first.Y - (double)second.Y) / ((double)first.X - (double)second.X);
-                            b = first.Y - (k * first.X);
-                            topCount = 0;
-                            bottomCount = 0;
-                            foreach (Shape third in shapes)
-                            {
-                                if (third != first && third != second)
-                                {
-                                    if (third.Y >= k * third.X + b) topCount++;
-                                    else bottomCount++;
-                                }
-                            }
-                            if (bottomCount == 0 || topCount == 0)
-                            {
-                                second.inShell = true;
-                                first.inShell = true;
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        }
 
         private void byDefinitionToolStripMenuItem1_Click(object sender, EventArgs e)
         {
@@ -710,17 +296,8 @@ namespace Многоугольники
 
         public void OnRadiusChanged(object sender, RadiusEventArgs e)
         {
-            Console.WriteLine("Shape radius" + Shape.Radius);
-            if (radiusAfterOpen)
-            {
-                e.Radius = Shape.Radius;
-                radiusAfterOpen = false;
-            }
-            else
-            {
-                Shape.Radius = e.Radius;
-                changed = true;
-            }
+            Shape.Radius = e.Radius;
+            changed = true;
             Refresh();
         }
         private RadiusForm radfrm = new RadiusForm(radiusFromFile: Shape.Radius);
@@ -864,7 +441,6 @@ namespace Многоугольники
                         lineColor = (Color)settings[3];
 
                         savedFile = openFileDialog.FileName;
-                        radiusAfterOpen = true;
                         Refresh();
                         fileStream.Close();
                     }
