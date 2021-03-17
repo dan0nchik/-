@@ -710,7 +710,7 @@ namespace Многоугольники
 
         public void OnRadiusChanged(object sender, RadiusEventArgs e)
         {
-            Console.WriteLine(Shape.Radius);
+            Console.WriteLine("Shape radius" + Shape.Radius);
             if (radiusAfterOpen)
             {
                 e.Radius = Shape.Radius;
@@ -786,7 +786,7 @@ namespace Многоугольники
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Save();
         }
         private void Save()
         {
