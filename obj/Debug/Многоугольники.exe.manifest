@@ -42,6 +42,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PolygonsLib.dll" size="19456">
+      <assemblyIdentity name="PolygonsLib" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>Lcei+gTsSTr32IiZrqZACBgfFysFxlvcCYYTD5GeHjA=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ScottPlot.dll" size="340480">
       <assemblyIdentity name="ScottPlot" version="4.0.47.0" publicKeyToken="86698DC10387C39E" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -78,14 +90,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Многоугольники.exe" size="92152">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Многоугольники.exe" size="77816">
       <assemblyIdentity name="Многоугольники" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>6mieP0DAWbAJpDjned22FCx0n95xbcWGVF0dGZeqAuw=</dsig:DigestValue>
+        <dsig:DigestValue>SDuoOVPKNE5asLZBxtMe+01ibzdTWYGjTBSU2zZ02gU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

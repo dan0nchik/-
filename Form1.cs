@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
+using PolygonsLib;
 
 namespace Многоугольники
 {
