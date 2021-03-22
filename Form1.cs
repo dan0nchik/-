@@ -16,7 +16,7 @@ namespace Многоугольники
         List<Shape> shapes;
         private int shapeFlag, algoFlag;
         private Color lineColor, pointColor;
-        private bool changed, showPlayIcon, radiusAfterOpen;
+        private bool changed, showPlayIcon;
         System.Windows.Forms.Timer timer;
         Random random;
         FileStream fileStream;
@@ -38,7 +38,6 @@ namespace Многоугольники
             savedFile = "";
             changed = false;
             algorithm = new Algorithm();
-            radiusAfterOpen = false;
             formatter = new BinaryFormatter();
             KeyDown += Form1_KeyDown;
             FormClosing += Form1_Closing;
@@ -301,18 +300,19 @@ namespace Многоугольники
             changed = true;
             Refresh();
         }
-        private RadiusForm radfrm = new RadiusForm(radiusFromFile: Shape.Radius);
+        private RadiusForm radfrm = new RadiusForm();
         private void radiusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (radfrm.IsAccessible == false)
                 radfrm.Activate();
             if (radfrm.IsDisposed)
-                radfrm = new RadiusForm(radiusFromFile: Shape.Radius);
+                radfrm = new RadiusForm();
             if (radfrm.WindowState == FormWindowState.Maximized)
                 radfrm.WindowState = FormWindowState.Normal;
             if (radfrm.WindowState == FormWindowState.Minimized)
                 radfrm.WindowState = FormWindowState.Normal;
-            
+
+            radfrm.radiusFromFile = Shape.Radius;
             radfrm.RC += OnRadiusChanged;
             radfrm.Show();
 
