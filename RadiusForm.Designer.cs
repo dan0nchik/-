@@ -58,6 +58,6 @@ namespace Многоугольники
 
         #endregion
 
-        private System.Windows.Forms.TrackBar trackBar1;
+        public System.Windows.Forms.TrackBar trackBar1;
     }
 }

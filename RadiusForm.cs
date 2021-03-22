@@ -23,7 +23,6 @@ namespace Многоугольники
     public delegate void RadiusChanged(object sender, RadiusEventArgs e);
     public partial class RadiusForm : Form
     {
-        public int radiusFromFile = 0;
         public event RadiusChanged RC;
 
         public RadiusForm()
@@ -34,14 +33,10 @@ namespace Многоугольники
         private void RadiusForm_Load(object sender, EventArgs e)
         {
             
-            trackBar1.Value = radiusFromFile - 10;
-        
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
-        {
-            Console.WriteLine("trackbar " + trackBar1.Value);
-            
+        {   
             RadiusEventArgs radiusEvent = new RadiusEventArgs(trackBar1.Value);
             RC(this, radiusEvent);
         }

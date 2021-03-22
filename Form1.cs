@@ -312,7 +312,7 @@ namespace Многоугольники
             if (radfrm.WindowState == FormWindowState.Minimized)
                 radfrm.WindowState = FormWindowState.Normal;
 
-            radfrm.radiusFromFile = Shape.Radius;
+            radfrm.trackBar1.Value = Shape.Radius - 10;
             radfrm.RC += OnRadiusChanged;
             radfrm.Show();
 
@@ -354,6 +354,7 @@ namespace Многоугольники
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(changed)
             SaveAs();
         }
 
@@ -364,6 +365,7 @@ namespace Многоугольники
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if(changed)
             Save();
         }
         private void Save()
@@ -442,6 +444,7 @@ namespace Многоугольники
                         lineColor = (Color)settings[3];
 
                         savedFile = openFileDialog.FileName;
+                        radfrm.trackBar1.Value = Shape.Radius - 10;
                         Refresh();
                         fileStream.Close();
                     }
@@ -452,6 +455,7 @@ namespace Многоугольники
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.S)
             {
+                if(changed)
                 Save();
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.O)
