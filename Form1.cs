@@ -466,6 +466,7 @@ namespace Многоугольники
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            var reset = true;
             if (!changed)
             {
                 shapes.Clear();
@@ -486,10 +487,21 @@ namespace Многоугольники
                     shapes.Clear();
                     changed = false;
                 }
+                else
+                {
+                    reset = false;
+                }
+            }
+            if (reset)
+            {
+                Shape.Radius = 10;
+                savedFile = "";
+                lineColor = Color.Black;
+                pointColor = Color.Black;
+                radfrm.trackBar1.Value = 0;
+                shapeFlag = 0;
                 Refresh();
             }
-
-
         }
 
         private void jarvisVsParallelJarvisToolStripMenuItem_Click(object sender, EventArgs e)

@@ -84,4 +84,3 @@ C:\Users\Daniel\Source\Repos\dan0nchik\Polygons\obj\Debug\Многоугольн
 C:\Users\Daniel\Source\Repos\dan0nchik\Polygons\obj\Debug\Многоугольники.exe
 C:\Users\Daniel\Source\Repos\dan0nchik\Polygons\obj\Debug\Многоугольники.pdb
 C:\Users\Daniel\source\repos\dan0nchik\Polygons\bin\Debug\PolygonsLib.dll
-C:\Users\Daniel\source\repos\dan0nchik\Polygons\bin\Debug\PolygonsLib.pdb

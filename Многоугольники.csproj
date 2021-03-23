@@ -81,6 +81,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PolygonsLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\PolygonsLib.dll</HintPath>
+    </Reference>
     <Reference Include="ScottPlot, Version=4.0.47.0, Culture=neutral, PublicKeyToken=86698dc10387c39e, processorArchitecture=MSIL">
       <HintPath>packages\ScottPlot.4.0.47\lib\netstandard2.0\ScottPlot.dll</HintPath>
     </Reference>
@@ -178,12 +182,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PolygonsLib\PolygonsLib.csproj">
-      <Project>{038fa651-eb4e-4cb5-908d-c1619242c488}</Project>
-      <Name>PolygonsLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
